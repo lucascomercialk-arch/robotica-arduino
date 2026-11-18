@@ -44,12 +44,3 @@ Plataforma web educacional completa, interativa e 100% responsiva desenvolvida e
 ├── script.js    # Lógica Vanilla JS (Simulador PWM, Mapa UNO, Progresso localStorage e Relatórios)
 └── README.md    # Documentação do projeto e instruções de deploy no GitHub Pages
 ```
-
----
-
-## 🚀 Como Executar Localmente ou Publicar no GitHub Pages
-
-Por ser construído 100% com tecnologias web nativas (zero dependências externas de build ou backend):
-
-- **Localmente:** Basta abrir o arquivo `index.html` em qualquer navegador moderno.
-- **No GitHub Pages:** Vá em **Settings > Pages** no repositório do GitHub, selecione a branch `main` (pasta `/ (root)`) e clique em **Save**.
