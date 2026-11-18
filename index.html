@@ -1,0 +1,1740 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Robótica com Arduino — Do Liga/Desliga ao Controle de Motor</title>
+  <meta name="description" content="Plataforma web educacional completa para oficinas práticas de Robótica com Arduino UNO. Entradas, saídas digitais e analógicas (PWM) — Do Tinkercad ao Kit Físico.">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Mobile Top Header -->
+  <header class="mobile-header">
+    <div class="brand-mini">
+      <span class="brand-badge">UNO</span>
+      <span class="brand-title">Robótica Arduino</span>
+    </div>
+    <div class="mobile-actions">
+      <button id="theme-toggle-mobile" class="icon-btn" aria-label="Alternar tema" title="Alternar Dark/Light Mode">
+        <span class="theme-icon">☀️</span>
+      </button>
+      <button id="menu-toggle" class="icon-btn" aria-label="Abrir menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-box">
+          <svg width="34" height="34" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="40" height="40" rx="10" fill="#00979D"/>
+            <path d="M13 20C10.2 20 8 17.8 8 15C8 12.2 10.2 10 13 10C15.4 10 17.4 11.7 18.8 14.2L21.2 18.5C22.6 21 24.6 22.7 27 22.7C29.8 22.7 32 20.5 32 17.7C32 14.9 29.8 12.7 27 12.7" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M13 25C10.2 25 8 22.8 8 20C8 17.2 10.2 15 13 15C15.4 15 17.4 16.7 18.8 19.2L21.2 23.5C22.6 26 24.6 27.7 27 27.7C29.8 27.7 32 25.5 32 22.7" stroke="#A7F3D0" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 3"/>
+            <text x="10.5" y="16.5" fill="white" font-size="7" font-weight="bold" font-family="monospace">-</text>
+            <text x="24.5" y="19.5" fill="white" font-size="7" font-weight="bold" font-family="monospace">+</text>
+          </svg>
+          <div>
+            <h1 class="sidebar-title">Robótica UNO</h1>
+            <span class="sidebar-sub">Projeto de Extensão</span>
+          </div>
+        </div>
+        <button id="theme-toggle" class="theme-btn" aria-label="Alternar Tema" title="Alternar modo escuro/claro">
+          <span class="theme-icon">☀️</span>
+          <span class="theme-label">Tema</span>
+        </button>
+      </div>
+
+      <!-- Progress Tracker -->
+      <div class="progress-card">
+        <div class="progress-header">
+          <span>Progresso da Oficina</span>
+          <strong id="progress-percent">0%</strong>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progress-bar-fill" style="width: 0%"></div>
+        </div>
+        <p class="progress-hint" id="progress-count-text">0 de 6 etapas concluídas</p>
+      </div>
+
+      <!-- Nav Links -->
+      <nav class="sidebar-nav" aria-label="Navegação Principal">
+        <a href="#inicio" class="nav-link active" data-section="inicio">
+          <span class="nav-num">01</span>
+          <span class="nav-text">Início & Metodologia</span>
+          <span class="nav-check" id="nav-check-inicio"></span>
+        </a>
+        <a href="#bancada" class="nav-link" data-section="bancada">
+          <span class="nav-num">02</span>
+          <span class="nav-text">Guia de Bancada & Pinos</span>
+          <span class="nav-check" id="nav-check-bancada"></span>
+        </a>
+        <a href="#aulas" class="nav-link" data-section="aulas">
+          <span class="nav-num">03</span>
+          <span class="nav-text">Roteiro & Simulador PWM</span>
+          <span class="nav-check" id="nav-check-aulas"></span>
+        </a>
+        <a href="#atividades" class="nav-link" data-section="atividades">
+          <span class="nav-num">04</span>
+          <span class="nav-text">4 Fichas Práticas</span>
+          <span class="nav-check" id="nav-check-atividades"></span>
+        </a>
+        <a href="#professor" class="nav-link" data-section="professor">
+          <span class="nav-num">05</span>
+          <span class="nav-text">Docente & Evidências</span>
+          <span class="nav-check" id="nav-check-professor"></span>
+        </a>
+      </nav>
+
+      <div class="sidebar-Checklist">
+        <div class="checklist-title">Checklist de Conclusão</div>
+        <label class="step-check">
+          <input type="checkbox" class="progress-checkbox" data-step="teoria">
+          <span>Fundamentos & Segurança</span>
+        </label>
+        <label class="step-check">
+          <input type="checkbox" class="progress-checkbox" data-step="simulador">
+          <span>Teste no Simulador PWM</span>
+        </label>
+        <label class="step-check">
+          <input type="checkbox" class="progress-checkbox" data-step="at1">
+          <span>Ficha 1: LED & Saída A0</span>
+        </label>
+        <label class="step-check">
+          <input type="checkbox" class="progress-checkbox" data-step="at2">
+          <span>Ficha 2: Botão Digital</span>
+        </label>
+        <label class="step-check">
+          <input type="checkbox" class="progress-checkbox" data-step="at3">
+          <span>Ficha 3: Dimmer PWM</span>
+        </label>
+        <label class="step-check">
+          <input type="checkbox" class="progress-checkbox" data-step="at4">
+          <span>Ficha 4: Motor DC + NPN</span>
+        </label>
+        <button id="reset-progress" class="btn-text-reset">Limpar progresso salvo</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- =========================================================
+           SEÇÃO 1: VISÃO GERAL & METODOLOGIA ("Início")
+      ========================================================== -->
+      <section id="inicio" class="section-block">
+        <div class="hero-card">
+          <div class="hero-badges">
+            <span class="badge badge-primary">⏱️ 100 minutos / 2 Encontros</span>
+            <span class="badge badge-teal">🎓 Público-Alvo: Iniciantes</span>
+            <span class="badge badge-amber">🛠️ Projeto de Extensão Universitária</span>
+          </div>
+          <h2 class="hero-title">Robótica com Arduino — Do Liga/Desliga ao Controle de Motor</h2>
+          <p class="hero-subtitle">
+            Entradas, saídas digitais e analógicas (PWM) com Arduino UNO — Do Tinkercad ao Kit Físico
+          </p>
+          <div class="hero-cta-group">
+            <a href="#atividades" class="btn btn-primary">
+              <span>Ir Direto aos 4 Desafios Práticos</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <a href="#aulas" class="btn btn-secondary">Testar Simulador PWM</a>
+            <a href="#professor" class="btn btn-outline">Emitir Relatório / Plano Docente</a>
+          </div>
+        </div>
+
+        <!-- Fluxo de Trabalho: Regra de Ouro (3 Passos) -->
+        <div class="subsection">
+          <div class="section-heading">
+            <span class="kicker">REGRA DE OURO DA OFICINA</span>
+            <h3>Fluxo de Trabalho em 3 Passos</h3>
+            <p>Nenhum componente físico é energizado antes de validar a lógica e a polaridade virtualmente.</p>
+          </div>
+          <div class="workflow-grid">
+            <div class="workflow-card">
+              <div class="wf-step-num">1</div>
+              <div class="wf-icon">💻</div>
+              <h4>1. Simule no Tinkercad</h4>
+              <p>Monte o circuito virtualmente no Autodesk Tinkercad Circuits, posicione os resistores corretos e escreva o código C++ sem risco de queimar componentes.</p>
+            </div>
+            <div class="workflow-arrow" aria-hidden="true">➔</div>
+            <div class="workflow-card">
+              <div class="wf-step-num">2</div>
+              <div class="wf-icon">🔍</div>
+              <h4>2. Teste e Corrija (Validação)</h4>
+              <p>Inicie a simulação, verifique se o GND é comum, confira valores de corrente/resistores e valide com a dupla ou instrutor antes de pegar os cabos.</p>
+            </div>
+            <div class="workflow-arrow" aria-hidden="true">➔</div>
+            <div class="workflow-card">
+              <div class="wf-step-num">3</div>
+              <div class="wf-icon">🔌</div>
+              <h4>3. Monte no Kit Físico</h4>
+              <p>Com o Arduino <strong>desconectado do USB</strong>, reproduza a montagem na protoboard física, revise a bancada e só então conecte o cabo para upload.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fundamentos Rápidos -->
+        <div class="subsection">
+          <div class="section-heading">
+            <span class="kicker">FUNDAMENTOS RÁPIDOS</span>
+            <h3>Conceitos Essenciais da Robótica e Eletrônica</h3>
+          </div>
+
+          <div class="fundamentals-grid">
+            <!-- Card 1: O que é Robótica -->
+            <div class="info-card">
+              <div class="card-tag">CICLO ROBÓTICO</div>
+              <h4>O que é Robótica? (Perceber → Processar → Agir)</h4>
+              <p>Um sistema robótico interage com o mundo físico através de três etapas contínuas:</p>
+              <!-- Inline SVG Diagram: Perceber -> Processar -> Agir -->
+              <div class="svg-wrapper">
+                <svg viewBox="0 0 500 130" class="diagram-svg" role="img" aria-label="Ciclo Perceber, Processar e Agir">
+                  <!-- Perceber -->
+                  <rect x="10" y="20" width="135" height="90" rx="10" fill="rgba(0,151,157,0.15)" stroke="#00979D" stroke-width="2"/>
+                  <text x="77" y="48" text-anchor="middle" fill="#00979D" font-weight="700" font-size="13">1. PERCEBER</text>
+                  <text x="77" y="68" text-anchor="middle" fill="currentColor" font-size="11">Entradas (Sensores)</text>
+                  <text x="77" y="86" text-anchor="middle" fill="#94A3B8" font-size="10">Botão, Potenciômetro</text>
+                  <!-- Arrow 1 -->
+                  <path d="M150 65 L175 65" stroke="#193DD0" stroke-width="2.5"/>
+                  <!-- Processar -->
+                  <rect x="182" y="20" width="135" height="90" rx="10" fill="rgba(25,61,208,0.18)" stroke="#193DD0" stroke-width="2"/>
+                  <text x="250" y="48" text-anchor="middle" fill="#60A5FA" font-weight="700" font-size="13">2. PROCESSAR</text>
+                  <text x="250" y="68" text-anchor="middle" fill="currentColor" font-size="11">Cérebro (Arduino)</text>
+                  <text x="250" y="86" text-anchor="middle" fill="#94A3B8" font-size="10">Código C++ / Lógica</text>
+                  <!-- Arrow 2 -->
+                  <path d="M322 65 L347 65" stroke="#10B981" stroke-width="2.5"/>
+                  <!-- Agir -->
+                  <rect x="355" y="20" width="135" height="90" rx="10" fill="rgba(16,185,129,0.15)" stroke="#10B981" stroke-width="2"/>
+                  <text x="422" y="48" text-anchor="middle" fill="#10B981" font-weight="700" font-size="13">3. AGIR</text>
+                  <text x="422" y="68" text-anchor="middle" fill="currentColor" font-size="11">Saídas (Atuadores)</text>
+                  <text x="422" y="86" text-anchor="middle" fill="#94A3B8" font-size="10">LEDs, Motor DC</text>
+                </svg>
+              </div>
+              <div class="pillars-pills">
+                <span class="pill">💻 Programação</span>
+                <span class="pill">⚡ Eletrônica</span>
+                <span class="pill">⚙️ Mecânica</span>
+                <span class="pill">🧠 IA & Controle</span>
+              </div>
+            </div>
+
+            <!-- Card 2: Circuito Elétrico (Loop Fechado) -->
+            <div class="info-card">
+              <div class="card-tag">ELETRICIDADE BÁSICA</div>
+              <h4>O que é um Circuito Elétrico? (Loop Fechado)</h4>
+              <p>Para a corrente elétrica fluir e realizar trabalho, ela precisa sair da fonte positiva (<strong>5V ou Pino HIGH</strong>), atravessar o componente de proteção/carga e retornar ao polo negativo (<strong>GND / 0V</strong>) formando um caminho fechado.</p>
+              <div class="svg-wrapper">
+                <svg viewBox="0 0 500 130" class="diagram-svg" role="img" aria-label="Diagrama de Circuito Elétrico em Loop Fechado">
+                  <!-- Closed Loop Wire -->
+                  <rect x="60" y="22" width="380" height="86" rx="14" fill="none" stroke="#475569" stroke-width="3" stroke-dasharray="6 4"/>
+                  <!-- Fonte 5V -->
+                  <rect x="30" y="42" width="75" height="46" rx="8" fill="#131A2A" stroke="#EF4444" stroke-width="2"/>
+                  <text x="67" y="62" text-anchor="middle" fill="#EF4444" font-weight="700" font-size="12">FONTE 5V</text>
+                  <text x="67" y="78" text-anchor="middle" fill="#94A3B8" font-size="10">Pino / +</text>
+                  <!-- Resistor -->
+                  <rect x="195" y="10" width="110" height="26" rx="6" fill="#D97706" stroke="#F59E0B" stroke-width="2"/>
+                  <text x="250" y="27" text-anchor="middle" fill="#FFF" font-weight="700" font-size="11">Resistor 220 Ω</text>
+                  <!-- LED Carga -->
+                  <circle cx="440" cy="65" r="24" fill="rgba(16,185,129,0.2)" stroke="#10B981" stroke-width="2.5"/>
+                  <text x="440" y="69" text-anchor="middle" fill="#10B981" font-weight="700" font-size="12">LED</text>
+                  <!-- GND -->
+                  <rect x="195" y="92" width="110" height="28" rx="6" fill="#131A2A" stroke="#38BDF8" stroke-width="2"/>
+                  <text x="250" y="110" text-anchor="middle" fill="#38BDF8" font-weight="700" font-size="11">Retorno GND (0V)</text>
+                </svg>
+              </div>
+              <p class="card-footnote">💡 <strong>Regra prática:</strong> Sem retorno ao <code>GND</code>, o circuito está aberto e nada liga. Ligar <code>5V</code> direto no <code>GND</code> sem carga causa <strong>curto-circuito</strong>!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SEÇÃO 2: GUIA DE BANCADA & COMPONENTES ("Antes de Começar")
+      ========================================================== -->
+      <section id="bancada" class="section-block">
+        <div class="section-heading">
+          <span class="kicker">ANTES DE COMEÇAR</span>
+          <h2>Guia de Bancada, Pinagem & Componentes</h2>
+          <p>Clique nos grupos de pinos do Arduino UNO abaixo ou nas abas laterais para inspecionar suas funções técnicas.</p>
+        </div>
+
+        <!-- Mapa Interativo de Pinos do Arduino UNO -->
+        <div class="uno-explorer-card">
+          <div class="uno-board-container">
+            <!-- SVG Ilustrativo e Interativo do Arduino UNO -->
+            <svg viewBox="0 0 680 390" class="uno-svg" id="uno-svg" role="img" aria-label="Mapa Interativo de Pinos do Arduino UNO">
+              <!-- Placa PCB -->
+              <rect x="40" y="20" width="600" height="350" rx="18" fill="#00757A" stroke="#00979D" stroke-width="4"/>
+              <rect x="52" y="32" width="576" height="326" rx="12" fill="#005F63"/>
+
+              <!-- Conector USB Tipo B -->
+              <rect x="12" y="75" width="62" height="75" rx="6" fill="#94A3B8" stroke="#CBD5E1" stroke-width="2"/>
+              <text x="43" y="117" text-anchor="middle" fill="#0F172A" font-weight="700" font-size="12" font-family="monospace">USB</text>
+
+              <!-- Jack de Alimentação Externa -->
+              <rect x="18" y="255" width="56" height="65" rx="6" fill="#1E293B" stroke="#475569" stroke-width="2"/>
+              <text x="46" y="292" text-anchor="middle" fill="#94A3B8" font-weight="700" font-size="10" font-family="monospace">7-12V</text>
+
+              <!-- Chip ATmega328P -->
+              <rect x="250" y="175" width="230" height="75" rx="6" fill="#0F172A" stroke="#334155" stroke-width="2"/>
+              <text x="365" y="210" text-anchor="middle" fill="#E2E8F0" font-weight="700" font-size="14" font-family="monospace">ATmega328P</text>
+              <text x="365" y="230" text-anchor="middle" fill="#38BDF8" font-size="11" font-family="monospace">Microcontrolador 16MHz</text>
+
+              <!-- Logo Arduino UNO -->
+              <text x="155" y="175" fill="#FFFFFF" font-weight="800" font-size="24" font-family="sans-serif">ARDUINO</text>
+              <text x="155" y="205" fill="#A7F3D0" font-weight="800" font-size="28" font-family="monospace">UNO R3</text>
+
+              <!-- GRUPO 1: Pinos Digitais 2 a 13 (Interativo) -->
+              <g class="pin-group" data-pin-group="digitais" tabindex="0">
+                <rect x="175" y="38" width="335" height="52" rx="8" fill="#0F172A" stroke="#38BDF8" stroke-width="2.5"/>
+                <text x="342" y="58" text-anchor="middle" fill="#38BDF8" font-weight="700" font-size="12" font-family="monospace">PINOS DIGITAIS (2 a 13) + GND</text>
+                <text x="342" y="78" text-anchor="middle" fill="#E2E8F0" font-size="11" font-family="monospace">13  12 ~11 ~10  ~9   8   |   7  ~6  ~5   4  ~3   2</text>
+              </g>
+
+              <!-- GRUPO 2: Destaque PWM (~3, 5, 6, 9, 10, 11) -->
+              <g class="pin-group" data-pin-group="pwm" tabindex="0">
+                <rect x="195" y="98" width="295" height="36" rx="8" fill="rgba(16,185,129,0.22)" stroke="#10B981" stroke-width="2"/>
+                <text x="342" y="121" text-anchor="middle" fill="#A7F3D0" font-weight="700" font-size="12" font-family="monospace">⚡ PWM (~3, ~5, ~6, ~9, ~10, ~11) analogWrite()</text>
+              </g>
+
+              <!-- GRUPO 3: Pinos 0 e 1 (RX / TX) - Alerta -->
+              <g class="pin-group" data-pin-group="rxtx" tabindex="0">
+                <rect x="520" y="38" width="100" height="52" rx="8" fill="rgba(239,68,68,0.25)" stroke="#EF4444" stroke-width="2.5"/>
+                <text x="570" y="59" text-anchor="middle" fill="#FCA5A5" font-weight="700" font-size="12" font-family="monospace">⚠️ 1(TX) 0(RX)</text>
+                <text x="570" y="77" text-anchor="middle" fill="#FEE2E2" font-size="10" font-family="monospace">EVITAR USO!</text>
+              </g>
+
+              <!-- GRUPO 4: Alimentação (5V, 3.3V, GND) -->
+              <g class="pin-group" data-pin-group="power" tabindex="0">
+                <rect x="155" y="295" width="215" height="52" rx="8" fill="#0F172A" stroke="#F59E0B" stroke-width="2.5"/>
+                <text x="262" y="315" text-anchor="middle" fill="#FBBF24" font-weight="700" font-size="12" font-family="monospace">POWER (ALIMENTAÇÃO)</text>
+                <text x="262" y="335" text-anchor="middle" fill="#E2E8F0" font-size="11" font-family="monospace">3.3V | 5V | GND | GND | Vin</text>
+              </g>
+
+              <!-- GRUPO 5: Entradas Analógicas A0 a A5 -->
+              <g class="pin-group" data-pin-group="analogicas" tabindex="0">
+                <rect x="385" y="295" width="235" height="52" rx="8" fill="#0F172A" stroke="#A855F7" stroke-width="2.5"/>
+                <text x="502" y="315" text-anchor="middle" fill="#D8B4FE" font-weight="700" font-size="12" font-family="monospace">ANALÓGICOS (A0 a A5)</text>
+                <text x="502" y="335" text-anchor="middle" fill="#E2E8F0" font-size="11" font-family="monospace">A0   A1   A2   A3   A4   A5</text>
+              </g>
+            </svg>
+          </div>
+
+          <!-- Painel de Detalhes do Pino Selecionado -->
+          <div class="uno-details-panel">
+            <div class="pin-filter-tabs">
+              <button class="pin-tab active" data-target="digitais">Digitais (2–13)</button>
+              <button class="pin-tab" data-target="pwm">PWM (~)</button>
+              <button class="pin-tab" data-target="analogicas">Analógicas (A0–A5)</button>
+              <button class="pin-tab" data-target="rxtx">Pinos 0 e 1 (RX/TX)</button>
+              <button class="pin-tab" data-target="power">5V & GND</button>
+            </div>
+
+            <div class="pin-info-box" id="pin-info-box">
+              <!-- Renderizado dinamicamente e com estado inicial padrão -->
+              <span class="pin-badge badge-blue">ENTRADA / SAÍDA DIGITAL</span>
+              <h4>Pinos Digitais 2 a 13</h4>
+              <p>Operam com apenas dois estados lógicos binários: <strong><code>HIGH</code> (Ligado / 5V)</strong> ou <strong><code>LOW</code> (Desligado / 0V)</strong>.</p>
+              <ul class="pin-specs">
+                <li><strong>Configuração:</strong> <code>pinMode(pino, OUTPUT)</code> ou <code>pinMode(pino, INPUT_PULLUP)</code></li>
+                <li><strong>Escrita/Leitura:</strong> <code>digitalWrite(pino, HIGH/LOW)</code> e <code>digitalRead(pino)</code></li>
+                <li><strong>Corrente máxima segura por pino:</strong> ~20 mA (sempre use resistor com LEDs!).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Catálogo de Componentes do Kit & Identificação de Resistores -->
+        <div class="subsection">
+          <div class="section-heading">
+            <span class="kicker">CATÁLOGO DE BANCADA</span>
+            <h3>Componentes do Kit & Identificação Visual de Resistores</h3>
+          </div>
+
+          <div class="components-grid">
+            <!-- 1. Protoboard -->
+            <div class="comp-card">
+              <div class="comp-header">
+                <span class="comp-tag">ESTRUTURA</span>
+                <h4>Protoboard (Matriz de Contatos)</h4>
+              </div>
+              <div class="svg-wrapper">
+                <svg viewBox="0 0 360 150" class="comp-svg" role="img" aria-label="Ligações internas da Protoboard">
+                  <rect x="10" y="10" width="340" height="130" rx="10" fill="#1E293B" stroke="#475569" stroke-width="2"/>
+                  <!-- Trilhas laterais -->
+                  <line x1="30" y1="26" x2="330" y2="26" stroke="#EF4444" stroke-width="3"/>
+                  <text x="20" y="30" fill="#EF4444" font-size="11" font-weight="bold">+</text>
+                  <line x1="30" y1="38" x2="330" y2="38" stroke="#38BDF8" stroke-width="3"/>
+                  <text x="20" y="42" fill="#38BDF8" font-size="11" font-weight="bold">-</text>
+                  <!-- Vão central -->
+                  <rect x="20" y="70" width="320" height="12" rx="3" fill="#0F172A"/>
+                  <text x="180" y="79" text-anchor="middle" fill="#94A3B8" font-size="9" font-family="monospace">VÃO CENTRAL (Encaixe do Botão / CI)</text>
+                  <!-- Trilhas de sinal (1 a 30) -->
+                  <g stroke="#10B981" stroke-width="3" stroke-linecap="round">
+                    <line x1="45" y1="48" x2="45" y2="66"/><line x1="75" y1="48" x2="75" y2="66"/><line x1="105" y1="48" x2="105" y2="66"/><line x1="135" y1="48" x2="135" y2="66"/><line x1="165" y1="48" x2="165" y2="66"/><line x1="195" y1="48" x2="195" y2="66"/><line x1="225" y1="48" x2="225" y2="66"/><line x1="255" y1="48" x2="255" y2="66"/><line x1="285" y1="48" x2="285" y2="66"/><line x1="315" y1="48" x2="315" y2="66"/>
+                    <line x1="45" y1="86" x2="45" y2="104"/><line x1="75" y1="86" x2="75" y2="104"/><line x1="105" y1="86" x2="105" y2="104"/><line x1="135" y1="86" x2="135" y2="104"/><line x1="165" y1="86" x2="165" y2="104"/><line x1="195" y1="86" x2="195" y2="104"/><line x1="225" y1="86" x2="225" y2="104"/><line x1="255" y1="86" x2="255" y2="104"/><line x1="285" y1="86" x2="285" y2="104"/><line x1="315" y1="86" x2="315" y2="104"/>
+                  </g>
+                  <!-- Barramento inferior -->
+                  <line x1="30" y1="116" x2="330" y2="116" stroke="#EF4444" stroke-width="3"/>
+                  <line x1="30" y1="128" x2="330" y2="128" stroke="#38BDF8" stroke-width="3"/>
+                </svg>
+              </div>
+              <ul class="comp-list">
+                <li><strong>Barramentos Laterais (<code>+</code> Vermelho e <code>-</code> Azul):</strong> Conduzem energia ao longo de toda a extensão lateral para distribuir <code>5V</code> e <code>GND</code>.</li>
+                <li><strong>Linhas Centrais (<code>1 a 30</code>):</strong> Conectadas internamente em grupos de 5 furos (A-B-C-D-E e F-G-H-I-J), isoladas pelo <strong>vão central</strong>.</li>
+              </ul>
+            </div>
+
+            <!-- 2. LED + Resistor 220 Ω -->
+            <div class="comp-card">
+              <div class="comp-header">
+                <span class="comp-tag">SAÍDA LUMINOSA</span>
+                <h4>LED + Resistor de 220 Ω</h4>
+              </div>
+              <div class="svg-wrapper">
+                <svg viewBox="0 0 360 150" class="comp-svg" role="img" aria-label="Polaridade do LED e Resistor 220 Ohms">
+                  <!-- LED -->
+                  <path d="M55 65 C55 35, 105 35, 105 65 L105 85 L55 85 Z" fill="#EF4444" opacity="0.85"/>
+                  <rect x="50" y="82" width="55" height="7" rx="2" fill="#DC2626"/>
+                  <!-- Perna longa Anodo -->
+                  <line x1="68" y1="89" x2="68" y2="140" stroke="#CBD5E1" stroke-width="3"/>
+                  <text x="68" y="25" text-anchor="middle" fill="#10B981" font-size="11" font-weight="bold">Anodo (+) Longa</text>
+                  <!-- Perna curta Catodo -->
+                  <line x1="92" y1="89" x2="92" y2="122" stroke="#94A3B8" stroke-width="3"/>
+                  <text x="115" y="136" fill="#38BDF8" font-size="10" font-weight="bold">Catodo (-) Curta / Chanfro</text>
+
+                  <!-- Resistor 220 Ohm (Vermelho - Vermelho - Marrom) -->
+                  <line x1="165" y1="65" x2="335" y2="65" stroke="#94A3B8" stroke-width="3"/>
+                  <rect x="195" y="47" width="110" height="36" rx="10" fill="#E2C792" stroke="#B45309" stroke-width="2"/>
+                  <!-- Faixas: Vermelho, Vermelho, Marrom, Dourado -->
+                  <rect x="212" y="47" width="10" height="36" fill="#EF4444"/>
+                  <rect x="232" y="47" width="10" height="36" fill="#EF4444"/>
+                  <rect x="252" y="47" width="10" height="36" fill="#78350F"/>
+                  <rect x="282" y="47" width="8" height="36" fill="#F59E0B"/>
+                  <text x="250" y="35" text-anchor="middle" fill="currentColor" font-size="11" font-weight="bold">220 Ω (Verm • Verm • Marrom)</text>
+                  <text x="250" y="106" text-anchor="middle" fill="#10B981" font-size="11" font-family="monospace">I = (5V - 2V) / 220Ω ≈ 13.6 mA</text>
+                </svg>
+              </div>
+              <ul class="comp-list">
+                <li><strong>Polaridade do LED:</strong> Perna <strong>Longa = Anodo (<code>+</code>)</strong> vai ao pino de sinal; Perna <strong>Curta / Lado Chanfrado = Catodo (<code>-</code>)</strong> vai ao <code>GND</code>.</li>
+                <li><strong>Lei de Ohm Aplicada:</strong> <code>(5V - 2V) / 220 Ω ≈ 14 mA</code> (protege o LED e o pino do Arduino).</li>
+                <li><strong>Cores (220 Ω):</strong> <span class="color-dot red"></span>Vermelho – <span class="color-dot red"></span>Vermelho – <span class="color-dot brown"></span>Marrom.</li>
+              </ul>
+            </div>
+
+            <!-- 3. Botão (Push Button) + Resistor 10 kΩ -->
+            <div class="comp-card">
+              <div class="comp-header">
+                <span class="comp-tag">ENTRADA DIGITAL</span>
+                <h4>Push Button + Resistor 10 kΩ</h4>
+              </div>
+              <div class="svg-wrapper">
+                <svg viewBox="0 0 360 150" class="comp-svg" role="img" aria-label="Push Button e Resistor 10k Ohms">
+                  <!-- Push button -->
+                  <rect x="45" y="42" width="66" height="66" rx="8" fill="#334155" stroke="#94A3B8" stroke-width="2"/>
+                  <circle cx="78" cy="75" r="20" fill="#EF4444"/>
+                  <line x1="35" y1="54" x2="45" y2="54" stroke="#CBD5E1" stroke-width="4"/>
+                  <line x1="111" y1="54" x2="121" y2="54" stroke="#CBD5E1" stroke-width="4"/>
+                  <line x1="35" y1="96" x2="45" y2="96" stroke="#CBD5E1" stroke-width="4"/>
+                  <line x1="111" y1="96" x2="121" y2="96" stroke="#CBD5E1" stroke-width="4"/>
+                  <text x="78" y="130" text-anchor="middle" fill="#94A3B8" font-size="10">Encaixe sobre o vão central</text>
+
+                  <!-- Resistor 10k Ohm (Marrom - Preto - Laranja) -->
+                  <line x1="165" y1="65" x2="335" y2="65" stroke="#94A3B8" stroke-width="3"/>
+                  <rect x="195" y="47" width="110" height="36" rx="10" fill="#E2C792" stroke="#B45309" stroke-width="2"/>
+                  <!-- Faixas: Marrom, Preto, Laranja, Dourado -->
+                  <rect x="212" y="47" width="10" height="36" fill="#78350F"/>
+                  <rect x="232" y="47" width="10" height="36" fill="#0F172A"/>
+                  <rect x="252" y="47" width="10" height="36" fill="#F97316"/>
+                  <rect x="282" y="47" width="8" height="36" fill="#F59E0B"/>
+                  <text x="250" y="35" text-anchor="middle" fill="currentColor" font-size="11" font-weight="bold">10 kΩ (Marrom • Preto • Laranja)</text>
+                  <text x="250" y="106" text-anchor="middle" fill="#38BDF8" font-size="10" font-family="monospace">Evita flutuação (Pull-down)</text>
+                </svg>
+              </div>
+              <ul class="comp-list">
+                <li><strong>Encaixe:</strong> Posicione o botão "cavalgando" o vão central da protoboard para não dar curto permanente entre os terminais.</li>
+                <li><strong>Cores (10 kΩ):</strong> <span class="color-dot brown"></span>Marrom – <span class="color-dot black"></span>Preto – <span class="color-dot orange"></span>Laranja (ou use <code>INPUT_PULLUP</code> interno via código!).</li>
+              </ul>
+            </div>
+
+            <!-- 4. Potenciômetro (10 kΩ) -->
+            <div class="comp-card">
+              <div class="comp-header">
+                <span class="comp-tag">ENTRADA ANALÓGICA</span>
+                <h4>Potenciômetro Linear 10 kΩ</h4>
+              </div>
+              <div class="svg-wrapper">
+                <svg viewBox="0 0 360 150" class="comp-svg" role="img" aria-label="Pinagem do Potenciômetro 10k">
+                  <circle cx="180" cy="58" r="36" fill="#1E293B" stroke="#38BDF8" stroke-width="3"/>
+                  <circle cx="180" cy="58" r="16" fill="#475569"/>
+                  <line x1="180" y1="58" x2="198" y2="40" stroke="#F8FAFC" stroke-width="4" stroke-linecap="round"/>
+                  <!-- 3 Pinos -->
+                  <line x1="152" y1="92" x2="152" y2="128" stroke="#EF4444" stroke-width="4"/>
+                  <line x1="180" y1="94" x2="180" y2="128" stroke="#A855F7" stroke-width="4"/>
+                  <line x1="208" y1="92" x2="208" y2="128" stroke="#38BDF8" stroke-width="4"/>
+                  <text x="112" y="142" text-anchor="middle" fill="#EF4444" font-size="11" font-weight="bold">Pino 1: 5V</text>
+                  <text x="180" y="142" text-anchor="middle" fill="#D8B4FE" font-size="11" font-weight="bold">Meio: Sinal A0</text>
+                  <text x="255" y="142" text-anchor="middle" fill="#38BDF8" font-size="11" font-weight="bold">Pino 3: GND</text>
+                </svg>
+              </div>
+              <ul class="comp-list">
+                <li><strong>Ligação Padrão:</strong> Ponta 1 no <code>5V</code>, <strong>Pino Central no <code>A0</code></strong> (varia de 0V a 5V → <code>0 a 1023</code>), Ponta 3 no <code>GND</code>.</li>
+                <li>💡 <strong>Dica de Bancada:</strong> <em>"Se funcionar ao contrário (aumentar para a esquerda), basta inverter os fios 5V e GND nas pontas!"</em></li>
+              </ul>
+            </div>
+
+            <!-- 5. Motor DC + Transistor NPN + Resistor 1 kΩ + Diodo -->
+            <div class="comp-card comp-card-wide">
+              <div class="comp-header">
+                <span class="comp-tag">POTÊNCIA & ATUAÇÃO</span>
+                <h4>Motor DC + Transistor NPN (2N2222 / BC337) + Resistor 1 kΩ + Diodo (1N4007 / 1N4148)</h4>
+              </div>
+              <div class="svg-wrapper">
+                <svg viewBox="0 0 720 155" class="comp-svg" role="img" aria-label="Conjunto Motor DC, Transistor NPN, Resistor 1k e Diodo Flyback">
+                  <!-- Transistor NPN -->
+                  <g transform="translate(20, 15)">
+                    <path d="M40 30 L90 30 C90 65, 40 65, 40 30 Z" fill="#0F172A" stroke="#94A3B8" stroke-width="2"/>
+                    <rect x="40" y="15" width="50" height="18" fill="#1E293B" stroke="#94A3B8" stroke-width="2"/>
+                    <text x="65" y="28" text-anchor="middle" fill="#38BDF8" font-size="10" font-weight="bold" font-family="monospace">NPN</text>
+                    <line x1="48" y1="55" x2="48" y2="95" stroke="#38BDF8" stroke-width="3"/>
+                    <line x1="65" y1="57" x2="65" y2="95" stroke="#10B981" stroke-width="3"/>
+                    <line x1="82" y1="55" x2="82" y2="95" stroke="#F59E0B" stroke-width="3"/>
+                    <text x="35" y="112" fill="#38BDF8" font-size="11" font-weight="bold">E (GND)</text>
+                    <text x="65" y="126" text-anchor="middle" fill="#10B981" font-size="11" font-weight="bold">B (Pino ~10)</text>
+                    <text x="102" y="112" fill="#F59E0B" font-size="11" font-weight="bold">C (Motor)</text>
+                  </g>
+
+                  <!-- Resistor 1k Ohm (Marrom - Preto - Vermelho) -->
+                  <g transform="translate(205, 25)">
+                    <line x1="10" y1="45" x2="170" y2="45" stroke="#94A3B8" stroke-width="3"/>
+                    <rect x="35" y="27" width="110" height="36" rx="10" fill="#E2C792" stroke="#B45309" stroke-width="2"/>
+                    <rect x="52" y="27" width="10" height="36" fill="#78350F"/>
+                    <rect x="72" y="27" width="10" height="36" fill="#0F172A"/>
+                    <rect x="92" y="27" width="10" height="36" fill="#EF4444"/>
+                    <rect x="122" y="27" width="8" height="36" fill="#F59E0B"/>
+                    <text x="90" y="16" text-anchor="middle" fill="currentColor" font-size="11" font-weight="bold">Resistor Base: 1 kΩ</text>
+                    <text x="90" y="82" text-anchor="middle" fill="#94A3B8" font-size="10">Marrom • Preto • Vermelho</text>
+                  </g>
+
+                  <!-- Diodo 1N4007 -->
+                  <g transform="translate(405, 25)">
+                    <line x1="10" y1="45" x2="140" y2="45" stroke="#94A3B8" stroke-width="3"/>
+                    <rect x="35" y="29" width="80" height="32" rx="4" fill="#0F172A" stroke="#475569" stroke-width="2"/>
+                    <!-- Faixa prateada Catodo -->
+                    <rect x="95" y="29" width="12" height="32" fill="#E2E8F0"/>
+                    <text x="75" y="16" text-anchor="middle" fill="currentColor" font-size="11" font-weight="bold">Diodo 1N4007 / 1N4148</text>
+                    <text x="75" y="82" text-anchor="middle" fill="#F59E0B" font-size="10">Faixa Prateada virada p/ 5V (+)</text>
+                  </g>
+
+                  <!-- Motor DC -->
+                  <g transform="translate(570, 20)">
+                    <circle cx="65" cy="52" r="36" fill="#334155" stroke="#F59E0B" stroke-width="3"/>
+                    <circle cx="65" cy="52" r="8" fill="#E2E8F0"/>
+                    <text x="65" y="34" text-anchor="middle" fill="#FBBF24" font-size="11" font-weight="bold">MOTOR</text>
+                    <text x="65" y="106" text-anchor="middle" fill="#94A3B8" font-size="10">Consome 100~300mA</text>
+                  </g>
+                </svg>
+              </div>
+              <div class="motor-tech-notes">
+                <div class="tech-note">
+                  <strong>🚫 Por que não ligar o Motor DC direto no pino do Arduino?</strong>
+                  <p>Um pino digital do Arduino fornece com segurança cerca de <strong>20 mA</strong> (máximo absoluto 40 mA). Um micro motor DC exige de <strong>100 mA a 350 mA</strong> para partir. Ligá-lo direto queima a saída do microcontrolador. O <strong>Transistor NPN</strong> atua como uma chave/amplificador eletrônico controlado pela Base via resistor de <strong>1 kΩ</strong> (<span class="color-dot brown"></span>Marrom - <span class="color-dot black"></span>Preto - <span class="color-dot red"></span>Vermelho).</p>
+                </div>
+                <div class="tech-note">
+                  <strong>🛡️ Qual a função do Diodo em paralelo (Diodo de Roda Livre / Flyback)?</strong>
+                  <p>A bobina interna do motor acumula energia magnética. Quando o PWM desliga o motor rapidamente, essa bobina gera um pico de <strong>tensão reversa</strong> de alta voltagem que pode destruir o transistor e resetar o Arduino. O diodo ligado em paralelo (com a <strong>faixa prateada apontando para o <code>5V / +</code></strong>) dissipa essa corrente reversa com segurança.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Painel de Alertas Críticos de Segurança -->
+        <div class="safety-panel">
+          <div class="safety-header">
+            <span class="safety-icon">🚨</span>
+            <div>
+              <h3>Painel de Alertas Críticos de Segurança na Bancada</h3>
+              <p>Leia obrigatoriamente antes de energizar sua placa Arduino UNO via cabo USB.</p>
+            </div>
+          </div>
+          <div class="safety-grid">
+            <div class="safety-alert alert-amber">
+              <div class="alert-title">⚠️ Alerta 1: Cabo USB Desconectado ao Montar</div>
+              <p><strong>Desconecte sempre o cabo USB</strong> antes de inserir, remover ou alterar jumpers e componentes na protoboard. Mexer nos fios com a placa energizada é a maior causa de curtos acidentais entre <code>5V</code> e <code>GND</code>.</p>
+            </div>
+            <div class="safety-alert alert-red">
+              <div class="alert-title">🛑 Alerta 2: Cuidado com o Resistor do Botão (Pull-down)</div>
+              <p><strong>Nunca use resistor de 220 Ω no lugar do 10 kΩ</strong> no circuito pull-down do botão, nem ligue 5V direto no GND ao pressionar a chave. Isso drena corrente excessiva, provoca aquecimento, queda de tensão e <strong>reinicialização imediata da placa Arduino</strong>.</p>
+            </div>
+            <div class="safety-alert alert-red">
+              <div class="alert-title">🛑 Alerta 3: Proibido Motor DC Direto no Pino Digital/PWM</div>
+              <p><strong>Jamais conecte os fios do Motor DC diretamente nos pinos 2 a 13.</strong> Utilize obrigatoriamente o circuito de acionamento com <strong>Transistor NPN + Resistor de 1 kΩ na Base + Diodo de proteção</strong> em paralelo com o motor.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SEÇÃO 3: ROTEIRO DAS AULAS (AULA 1 E AULA 2) & SIMULADOR PWM
+      ========================================================== -->
+      <section id="aulas" class="section-block">
+        <div class="section-heading">
+          <span class="kicker">CONTEÚDO TEÓRICO & PRÁTICO</span>
+          <h2>Roteiro das Aulas & Simulador Interativo PWM</h2>
+          <p>Alterne entre a Aula 1 e a Aula 2 e experimente em tempo real a conversão analógica-digital e modulação PWM.</p>
+        </div>
+
+        <!-- Abas Aula 1 e Aula 2 -->
+        <div class="class-tabs-wrapper">
+          <div class="tabs-bar" role="tablist">
+            <button class="tab-btn active" data-class-tab="aula1" role="tab" aria-selected="true">
+              📘 Aula 1: Fundamentos, Saídas e Entradas Digitais
+            </button>
+            <button class="tab-btn" data-class-tab="aula2" role="tab" aria-selected="false">
+              ⚡ Aula 2: Sinais Analógicos, Controle PWM e Motores DC
+            </button>
+          </div>
+
+          <!-- Conteúdo Aula 1 -->
+          <div class="class-tab-content active" id="aula1">
+            <div class="lesson-grid">
+              <div class="lesson-card">
+                <h4>1. Estrutura Básica de todo Código Arduino</h4>
+                <p>Todo programa (<em>sketch</em>) em C++ para Arduino é dividido em duas funções principais obrigatórias:</p>
+                <pre class="code-preview"><code>void setup() {
+  // Roda UMA ÚNICA VEZ quando o Arduino liga ou reseta.
+  // Usado para configurar os pinos:
+  pinMode(13, OUTPUT);       // Define pino como SAÍDA
+  pinMode(2, INPUT_PULLUP);  // Define pino como ENTRADA
+}
+
+void loop() {
+  // Roda INFINITAMENTE em ciclo contínuo após o setup().
+  // Aqui vai a lógica principal (ler botão, acender LED):
+  digitalWrite(13, HIGH);    // Liga (5V)
+  delay(500);                // Espera 500 milissegundos
+  digitalWrite(13, LOW);     // Desliga (0V)
+  delay(500);
+}</code></pre>
+              </div>
+
+              <div class="lesson-card">
+                <h4>2. Passo a Passo de Envio na Arduino IDE</h4>
+                <p>Após validar no Tinkercad e montar na protoboard física, siga esta sequência para gravar o código:</p>
+                <ol class="ide-steps">
+                  <li><strong>1. Conecte o Cabo USB:</strong> Plugue o cabo USB Tipo A/B entre o computador e o Arduino UNO (o LED <code>ON</code> da placa deve acender).</li>
+                  <li><strong>2. Selecione a Placa:</strong> No menu superior da Arduino IDE, acesse <code>Ferramentas &gt; Placa &gt; Arduino AVR Boards &gt; Arduino Uno</code>.</li>
+                  <li><strong>3. Selecione a Porta COM:</strong> Vá em <code>Ferramentas &gt; Porta</code> e escolha a porta que exibe <code>COMx (Arduino Uno)</code>.</li>
+                  <li><strong>4. Verificar e Carregar (Upload):</strong> Clique no botão <strong>➔ Carregar</strong> (Seta para a direita). Os LEDs <code>RX/TX</code> piscarão rapidamente até aparecer <em>"Carregamento concluído"</em>.</li>
+                </ol>
+                <div class="mini-callout">
+                  <strong>Resumo Aula 1:</strong> Sinais digitais possuem apenas 2 estados: <code>HIGH (5V)</code> ou <code>LOW (0V)</code>. Com eles criamos pisca-piscas, semáforos (Ficha 1) e lemos botões interruptores (Ficha 2).
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Conteúdo Aula 2 -->
+          <div class="class-tab-content" id="aula2">
+            <div class="lesson-grid">
+              <div class="lesson-card">
+                <h4>1. Entrada Analógica: De 0V–5V para 0–1023</h4>
+                <p>O mundo real não é apenas ligado/desligado. Para ler a posição de um potenciômetro no pino <code>A0</code>, o Arduino usa um conversor Analógico-Digital (ADC de 10 bits):</p>
+                <ul class="comp-list">
+                  <li><strong>Comando:</strong> <code>int v = analogRead(A0);</code></li>
+                  <li><strong>Escala de Leitura:</strong> <code>0V → 0</code> | <code>2.5V → 512</code> | <code>5.0V → 1023</code> (1024 níveis).</li>
+                </ul>
+                <h4 style="margin-top:1rem;">2. Saída PWM (~): Simulando Tensão Variável (0–255)</h4>
+                <p>O Arduino UNO não possui saída analógica pura, mas os pinos com til (<code>~3, ~5, ~6, ~9, ~10, ~11</code>) ligam e desligam centenas de vezes por segundo (<strong>PWM - Modulação por Largura de Pulso</strong>):</p>
+                <ul class="comp-list">
+                  <li><strong>Comando:</strong> <code>analogWrite(pinoPWM, brilho);</code></li>
+                  <li><strong>Escala de Escrita (8 bits):</strong> <code>0</code> (0% Duty Cycle = 0V) até <code>255</code> (100% Duty Cycle = 5V).</li>
+                </ul>
+              </div>
+
+              <div class="lesson-card">
+                <h4>3. A Ponte Mágica: Função <code>map()</code></h4>
+                <p>Como a entrada analógica lê de <strong>0 a 1023</strong> e a saída PWM aceita apenas de <strong>0 a 255</strong>, usamos a função matemática <code>map()</code> para converter proporcionalmente as escalas:</p>
+                <pre class="code-preview"><code>int leitura = analogRead(A0);             // Lê de 0 a 1023
+int pwm = map(leitura, 0, 1023, 0, 255);  // Converte p/ 0 a 255
+analogWrite(9, pwm);                      // Controla brilho/motor</code></pre>
+                <div class="mini-callout">
+                  <strong>Resumo Aula 2:</strong> Combinando <code>analogRead(A0)</code> + <code>map()</code> + <code>analogWrite()</code>, construímos o Dimmer de LED (Ficha 3) e o Controle de Velocidade de Motor DC com Transistor (Ficha 4).
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MINI-SIMULADOR INTERATIVO DE PWM & MAP() -->
+        <div class="pwm-simulator-card">
+          <div class="sim-header">
+            <div>
+              <span class="kicker">LABORATÓRIO VIRTUAL EM TEMPO REAL</span>
+              <h3>Simulador Interativo de Potenciômetro, <code>map()</code> e PWM</h3>
+              <p>Arraste o controle deslizante abaixo para girar o potenciômetro virtual na porta <code>A0</code> e veja o cálculo exato do Arduino UNO.</p>
+            </div>
+            <div class="sim-presets">
+              <button class="preset-btn" data-adc="0">0% (0)</button>
+              <button class="preset-btn" data-adc="256">25% (256)</button>
+              <button class="preset-btn" data-adc="512">50% (512)</button>
+              <button class="preset-btn" data-adc="768">75% (768)</button>
+              <button class="preset-btn" data-adc="1023">100% (1023)</button>
+            </div>
+          </div>
+
+          <div class="sim-controls-row">
+            <label for="pot-slider" class="slider-label">
+              <span>🎛️ Girar Potenciômetro em <code>A0</code> (<code>analogRead</code>):</span>
+              <strong id="sim-adc-badge" class="mono-val">512 / 1023</strong>
+            </label>
+            <input type="range" id="pot-slider" min="0" max="1023" value="512" class="pot-range">
+          </div>
+
+          <!-- Métricas calculadas em tempo real -->
+          <div class="sim-metrics-grid">
+            <div class="metric-box">
+              <span class="metric-label">Leitura A0 (10 bits)</span>
+              <strong class="metric-value mono-val" id="sim-adc-val">512</strong>
+              <span class="metric-sub">Escala: 0 a 1023</span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-label">Saída PWM (8 bits)</span>
+              <strong class="metric-value mono-val highlight-teal" id="sim-pwm-val">127</strong>
+              <span class="metric-sub">Escala: 0 a 255</span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-label">Tensão Média Estimada</span>
+              <strong class="metric-value mono-val highlight-amber" id="sim-volt-val">2.50 V</strong>
+              <span class="metric-sub">0.00V a 5.00V</span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-label">Duty Cycle (Ciclo Ativo)</span>
+              <strong class="metric-value mono-val highlight-green" id="sim-duty-val">50%</strong>
+              <span class="metric-sub">Tempo em HIGH (5V)</span>
+            </div>
+          </div>
+
+          <!-- Expressão Código Ao Vivo -->
+          <div class="live-code-strip">
+            <code>int v = <span id="code-v">512</span>; &nbsp;// analogRead(A0)</code>
+            <code>int pwm = map(<span id="code-v2">512</span>, 0, 1023, 0, 255); &nbsp;// Resultado: <strong id="code-pwm">127</strong></code>
+            <code>analogWrite(9, <span id="code-pwm2">127</span>);</code>
+          </div>
+
+          <!-- Visualizadores: Onda PWM + LED Virtual + Motor DC SVG -->
+          <div class="sim-visuals-grid">
+            <!-- Onda Quadrada Duty Cycle -->
+            <div class="visual-box">
+              <h5>Forma de Onda PWM (490 Hz)</h5>
+              <svg viewBox="0 0 260 95" class="pwm-wave-svg" id="pwm-wave-svg" aria-label="Gráfico de onda quadrada PWM">
+                <line x1="15" y1="20" x2="245" y2="20" stroke="#334155" stroke-dasharray="3 3"/>
+                <line x1="15" y1="75" x2="245" y2="75" stroke="#334155" stroke-dasharray="3 3"/>
+                <text x="4" y="24" fill="#94A3B8" font-size="9" font-family="monospace">5V</text>
+                <text x="4" y="78" fill="#94A3B8" font-size="9" font-family="monospace">0V</text>
+                <path id="pwm-wave-path" d="M 25 75 L 25 20 L 80 20 L 80 75 L 135 75 L 135 20 L 190 20 L 190 75 L 245 75" fill="none" stroke="#10B981" stroke-width="3"/>
+              </svg>
+              <p class="visual-caption" id="wave-caption">50% do tempo em 5V (HIGH) / 50% em 0V (LOW)</p>
+            </div>
+
+            <!-- LED Virtual -->
+            <div class="visual-box">
+              <h5>Brilho do LED Virtual (Pino ~9)</h5>
+              <div class="virtual-led-stage">
+                <div class="led-glow-aura" id="led-glow-aura"></div>
+                <svg width="70" height="90" viewBox="0 0 70 90">
+                  <path id="virtual-led-bulb" d="M20 45 C20 20, 50 20, 50 45 L50 62 L20 62 Z" fill="#EF4444"/>
+                  <rect x="17" y="60" width="36" height="6" rx="2" fill="#B91C1C"/>
+                  <line x1="27" y1="66" x2="27" y2="88" stroke="#94A3B8" stroke-width="3"/>
+                  <line x1="43" y1="66" x2="43" y2="82" stroke="#94A3B8" stroke-width="3"/>
+                </svg>
+              </div>
+              <p class="visual-caption" id="led-status-text">Brilho Médio (PWM 127)</p>
+            </div>
+
+            <!-- Motor DC Virtual com Hélice SVG -->
+            <div class="visual-box">
+              <h5>Rotação do Motor DC (Pino ~10)</h5>
+              <div class="virtual-motor-stage">
+                <svg width="92" height="92" viewBox="0 0 100 100" id="motor-propeller-svg">
+                  <circle cx="50" cy="50" r="42" fill="none" stroke="#334155" stroke-width="2" stroke-dasharray="4 4"/>
+                  <g id="propeller-rotor" style="transform-origin: 50px 50px;">
+                    <ellipse cx="50" cy="22" rx="9" ry="22" fill="#00979D" opacity="0.9"/>
+                    <ellipse cx="50" cy="78" rx="9" ry="22" fill="#00979D" opacity="0.9"/>
+                    <ellipse cx="22" cy="50" rx="22" ry="9" fill="#38BDF8" opacity="0.9"/>
+                    <ellipse cx="78" cy="50" rx="22" ry="9" fill="#38BDF8" opacity="0.9"/>
+                    <circle cx="50" cy="50" r="10" fill="#E2E8F0" stroke="#0F172A" stroke-width="3"/>
+                  </g>
+                </svg>
+              </div>
+              <p class="visual-caption" id="motor-status-text">Velocidade: 50% (Giro Moderado)</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SEÇÃO 4: AS 4 ATIVIDADES PRÁTICAS (FICHAS INTERATIVAS)
+      ========================================================== -->
+      <section id="atividades" class="section-block">
+        <div class="section-heading">
+          <span class="kicker">MÃO NA MASSA — DO TINKERCAD AO KIT FÍSICO</span>
+          <h2>As 4 Atividades Práticas (Fichas de Bancada)</h2>
+          <p>Selecione uma ficha abaixo para ver a lista de materiais, tabela ponto-a-ponto de ligações, código C++ pronto para copiar, desafio extra e guia de solução de problemas.</p>
+        </div>
+
+        <!-- Seletor das 4 Fichas -->
+        <div class="activity-selector" role="tablist">
+          <button class="act-tab active" data-act="act1" role="tab" aria-selected="true">
+            <span class="act-level level-basic">Básico • Ficha 1</span>
+            <strong>LED na Saída A0 & Semáforo</strong>
+          </button>
+          <button class="act-tab" data-act="act2" role="tab" aria-selected="false">
+            <span class="act-level level-basic">Básico • Ficha 2</span>
+            <strong>Interruptor Digital (Botão)</strong>
+          </button>
+          <button class="act-tab" data-act="act3" role="tab" aria-selected="false">
+            <span class="act-level level-med">Médio • Ficha 3</span>
+            <strong>Dimmer de LED com PWM</strong>
+          </button>
+          <button class="act-tab" data-act="act4" role="tab" aria-selected="false">
+            <span class="act-level level-hard">Desafio • Ficha 4</span>
+            <strong>LED + Motor DC com Transistor</strong>
+          </button>
+        </div>
+
+        <!-- =====================================================
+             FICHA 1: ACENDER O LED COM A ENTRADA ANALÓGICA (A0 COMO SAÍDA) + VARIANTE SINALIZADOR
+        ====================================================== -->
+        <article class="activity-panel active" id="act1">
+          <div class="act-banner">
+            <div>
+              <span class="badge badge-teal">ATIVIDADE 1 • NÍVEL BÁSICO</span>
+              <h3>Acender o LED com a Porta A0 (Configurada como Saída) + Variante Sinalizador</h3>
+              <p>Descubra como qualquer pino analógico (<code>A0</code>) também pode operar como saída digital de 5V, além da montagem clássica do Sinalizador de Trânsito com 2 LEDs alternados nos pinos 12 e 13.</p>
+            </div>
+            <button class="btn btn-complete-act" data-check-step="at1">✔️ Marcar Ficha 1 como Concluída</button>
+          </div>
+
+          <div class="act-grid-2col">
+            <!-- Checklist de Materiais -->
+            <div class="act-box">
+              <h4>📦 Checklist de Materiais</h4>
+              <ul class="material-checklist">
+                <li><label><input type="checkbox"> 1x Placa Arduino UNO R3 + Cabo USB</label></li>
+                <li><label><input type="checkbox"> 1x Protoboard (Matriz de Contatos)</label></li>
+                <li><label><input type="checkbox"> 1x LED 5mm (ou 2x LEDs para a variante Sinalizador)</label></li>
+                <li><label><input type="checkbox"> 1x Resistor de <strong>220 Ω</strong> (Vermelho - Vermelho - Marrom)</label></li>
+                <li><label><input type="checkbox"> Jumpers Macho-Macho</label></li>
+              </ul>
+              <div class="quick-test-note">
+                <strong>⚡ Teste Rápido de Hardware (Direto no 5V):</strong> Antes de programar o pino <code>A0</code>, você pode testar se o LED e o resistor estão bons ligando o jumper do resistor direto no pino <code>5V</code> do Arduino. Acendeu? Desconecte o USB e passe o fio para o pino <code>A0</code>!
+              </div>
+            </div>
+
+            <!-- Tabela de Ligações -->
+            <div class="act-box">
+              <h4>🔌 Tabela de Ligações (Ponto A → Ponto B → Componente)</h4>
+              <div class="table-responsive">
+                <table class="wiring-table">
+                  <thead>
+                    <tr>
+                      <th>Ponto A (Origem)</th>
+                      <th>Ponto B (Destino)</th>
+                      <th>Componente / Observação</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><code>Arduino Pino A0</code></td>
+                      <td><code>Protoboard Linha 10</code></td>
+                      <td>Jumper de Sinal (ou Pinos 12 e 13 na variante)</td>
+                    </tr>
+                    <tr>
+                      <td><code>Protoboard Linha 10</code></td>
+                      <td><code>Protoboard Linha 14</code></td>
+                      <td>Resistor de <strong>220 Ω</strong> (Proteção)</td>
+                    </tr>
+                    <tr>
+                      <td><code>Protoboard Linha 14</code></td>
+                      <td><code>Anodo do LED (+)</code></td>
+                      <td>Perna <strong>Longa</strong> do LED</td>
+                    </tr>
+                    <tr>
+                      <td><code>Catodo do LED (-)</code></td>
+                      <td><code>Barramento Azul (-)</code></td>
+                      <td>Perna <strong>Curta</strong> (Lado chanfrado)</td>
+                    </tr>
+                    <tr>
+                      <td><code>Arduino GND</code></td>
+                      <td><code>Barramento Azul (-)</code></td>
+                      <td>Retorno de terra obrigatório (0V)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Passo a Passo & Código C++ -->
+          <div class="act-grid-2col">
+            <div class="act-box">
+              <h4>🛠️ Passo a Passo de Execução</h4>
+              <ol class="step-list">
+                <li><strong>Simule no Tinkercad:</strong> Monte o LED em série com o resistor de 220 Ω conectado à porta <code>A0</code> e ao <code>GND</code>.</li>
+                <li><strong>Teste Rápido 5V:</strong> Valide a polaridade do LED (Anodo longo no positivo, Catodo curto no GND).</li>
+                <li><strong>Programe <code>pinMode(A0, OUTPUT)</code>:</strong> Configure o pino analógico A0 para trabalhar como saída digital e envie <code>digitalWrite(A0, HIGH)</code>.</li>
+                <li><strong>Variante Manual de Bancada (Sinalizador):</strong> Adicione um segundo LED com seu próprio resistor de 220 Ω nos pinos <code>12</code> e <code>13</code> alternando a cada <code>delay(500)</code>.</li>
+              </ol>
+
+              <div class="challenge-card">
+                <h5>🚀 Desafio Extra (Ficha 1)</h5>
+                <p>Modifique o código da Ficha A0 para fazer o LED <strong>piscar continuamente a cada 500 milissegundos</strong> (0,5 segundo aceso e 0,5 segundo apagado) usando <code>digitalWrite(A0, HIGH)</code>, <code>delay(500)</code> e <code>digitalWrite(A0, LOW)</code>. Na variante de 2 LEDs, crie um sinalizador ferroviário onde quando o pino 13 liga, o 12 desliga!</p>
+              </div>
+            </div>
+
+            <div class="act-box">
+              <div class="code-box-header">
+                <span>💻 Código C++ (Ficha 1: Pino A0 + Variante Sinalizador)</span>
+                <button class="btn-copy" data-copy-target="code-act1">📋 Copiar Código</button>
+              </div>
+              <pre class="code-block" id="code-act1"><code>// ==========================================
+// ATIVIDADE 1: Acender LED com Porta A0
+// (Inclui Desafio de Piscar 500ms)
+// ==========================================
+
+void setup() {
+  // Os pinos A0 a A5 também funcionam como saídas digitais!
+  pinMode(A0, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(A0, HIGH); // Liga o LED (5V)
+  delay(500);             // Desafio Extra: aguarda 500ms
+  digitalWrite(A0, LOW);  // Desliga o LED (0V)
+  delay(500);             // Aguarda 500ms
+}
+
+/* ------------------------------------------
+   VARIANTE MANUAL DE BANCADA:
+   Sinalizador de Trânsito (2 LEDs: Pinos 12 e 13)
+   ------------------------------------------
+void setup() {
+  pinMode(12, OUTPUT);
+  pinMode(13, OUTPUT);
+}
+void loop() {
+  digitalWrite(13, HIGH);
+  digitalWrite(12, LOW);
+  delay(500);
+  digitalWrite(13, LOW);
+  digitalWrite(12, HIGH);
+  delay(500);
+}
+*/</code></pre>
+            </div>
+          </div>
+
+          <!-- Troubleshooting -->
+          <div class="troubleshooting-box">
+            <h4>🔧 Guia de Troubleshooting ("Se não funcionar...")</h4>
+            <div class="trouble-grid">
+              <div class="trouble-item">
+                <strong>1. O LED não acende de jeito nenhum:</strong>
+                <p>Verifique se as pernas do LED não estão invertidas (inverta Anodo e Catodo) ou se as duas pernas foram espetadas na mesma linha numerada da protoboard (em curto).</p>
+              </div>
+              <div class="trouble-item">
+                <strong>2. O LED acende muito fraco:</strong>
+                <p>Confira as cores do resistor! Se você usou o de 10 kΩ (Marrom-Preto-Laranja) em vez do de 220 Ω (Vermelho-Vermelho-Marrom), a corrente cai para 0.3 mA. Veja também se não esqueceu <code>pinMode(A0, OUTPUT);</code>.</p>
+              </div>
+              <div class="trouble-item">
+                <strong>3. Funciona no 5V mas não no pino A0:</strong>
+                <p>Confirme se o código foi realmente carregado (Upload concluído na IDE) e se o jumper está no furo exato do <code>A0</code>.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- =====================================================
+             FICHA 2: INTERRUPTOR DIGITAL (BOTÃO + LED)
+        ====================================================== -->
+        <article class="activity-panel" id="act2">
+          <div class="act-banner">
+            <div>
+              <span class="badge badge-teal">ATIVIDADE 2 • NÍVEL BÁSICO</span>
+              <h3>Interruptor Digital (Push Button + LED)</h3>
+              <p>Controle um LED através da leitura digital de um botão. Compare a abordagem moderna com resistor interno (<code>INPUT_PULLUP</code>) e a abordagem clássica com resistor <em>pull-down</em> externo de 10 kΩ.</p>
+            </div>
+            <button class="btn btn-complete-act" data-check-step="at2">✔️ Marcar Ficha 2 como Concluída</button>
+          </div>
+
+          <div class="act-grid-2col">
+            <!-- Checklist de Materiais -->
+            <div class="act-box">
+              <h4>📦 Checklist de Materiais</h4>
+              <ul class="material-checklist">
+                <li><label><input type="checkbox"> 1x Arduino UNO R3 + Cabo USB + Protoboard</label></li>
+                <li><label><input type="checkbox"> 1x Botão Táctil (Push Button de 4 terminais)</label></li>
+                <li><label><input type="checkbox"> 1x LED 5mm + 1x Resistor de <strong>220 Ω</strong> (Verm-Verm-Marrom)</label></li>
+                <li><label><input type="checkbox"> 1x Resistor de <strong>10 kΩ</strong> (Marrom-Preto-Laranja) <em>— usado na montagem Pull-down externa</em></label></li>
+                <li><label><input type="checkbox"> Jumpers Macho-Macho</label></li>
+              </ul>
+              <div class="quick-test-note">
+                <strong>⚖️ Nota Comparativa: <code>INPUT_PULLUP</code> vs Pull-Down Externo (10 kΩ)</strong><br>
+                • <strong>Com <code>INPUT_PULLUP</code> (Ficha 2 - Pino 2 e LED no 8):</strong> Ativa o resistor interno do próprio Arduino conectado ao 5V. O botão vai ligado entre o <code>Pino 2</code> e o <code>GND</code>. A lógica fica invertida: solto lê <code>HIGH</code>; <strong>pressionado lê <code>LOW</code></strong>.<br>
+                • <strong>Com Pull-Down Externo (Manual de Bancada - Pino 2 e LED no 13):</strong> Usa um resistor físico de <strong>10 kΩ</strong> entre o <code>Pino 2</code> e o <code>GND</code>, e o botão liga o <code>5V</code> ao <code>Pino 2</code>. Pressionado lê <code>HIGH</code>.
+              </div>
+            </div>
+
+            <!-- Tabela de Ligações -->
+            <div class="act-box">
+              <h4>🔌 Tabela de Ligações (Abordagem Principal: <code>INPUT_PULLUP</code>)</h4>
+              <div class="table-responsive">
+                <table class="wiring-table">
+                  <thead>
+                    <tr>
+                      <th>Ponto A (Origem)</th>
+                      <th>Ponto B (Destino)</th>
+                      <th>Componente / Observação</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><code>Arduino Pino 2</code></td>
+                      <td><code>Terminal A do Botão</code></td>
+                      <td>Entrada Digital com <code>INPUT_PULLUP</code></td>
+                    </tr>
+                    <tr>
+                      <td><code>Terminal B do Botão</code></td>
+                      <td><code>Barramento GND (-)</code></td>
+                      <td>Ao apertar, fecha contato com 0V (<code>LOW</code>)</td>
+                    </tr>
+                    <tr>
+                      <td><code>Arduino Pino 8</code></td>
+                      <td><code>Resistor 220 Ω → Anodo (+)</code></td>
+                      <td>Saída Digital para o LED (ou Pino 13)</td>
+                    </tr>
+                    <tr>
+                      <td><code>Catodo do LED (-)</code></td>
+                      <td><code>Barramento GND (-)</code></td>
+                      <td>Perna curta do LED no terra</td>
+                    </tr>
+                    <tr>
+                      <td><code>Arduino GND</code></td>
+                      <td><code>Barramento GND (-)</code></td>
+                      <td>Referência comum do circuito</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="act-grid-2col">
+            <div class="act-box">
+              <h4>🛠️ Passo a Passo de Execução</h4>
+              <ol class="step-list">
+                <li><strong>Encaixe o Botão:</strong> Posicione o Push Button sobre o vão central da protoboard.</li>
+                <li><strong>Monte o Circuito do LED:</strong> Ligue o pino <code>8</code> ao resistor de 220 Ω, este ao Anodo do LED, e o Catodo ao <code>GND</code>.</li>
+                <li><strong>Ligue o Botão:</strong> Conecte um lado do botão ao pino <code>2</code> e o outro terminal (do mesmo lado) ao <code>GND</code>.</li>
+                <li><strong>Carregue o Código:</strong> Verifique como a condição <code>if (digitalRead(2) == LOW)</code> acende o LED instantaneamente ao pressionar.</li>
+              </ol>
+
+              <div class="challenge-card">
+                <h5>🚀 Desafio Extra (Temporizador de 3 Segundos)</h5>
+                <p>Altere o código para que, ao pressionar o botão uma única vez, o LED <strong>permaneça aceso por 3 segundos (<code>delay(3000)</code>)</strong> mesmo depois que você soltar o dedo do botão (como uma luz de corredor ou escada!). Basta adicionar <code>delay(3000);</code> logo após o <code>digitalWrite(pinoLED, HIGH);</code>.</p>
+              </div>
+            </div>
+
+            <div class="act-box">
+              <div class="code-box-header">
+                <span>💻 Código C++ (Ficha 2: INPUT_PULLUP + Nota Pull-Down)</span>
+                <button class="btn-copy" data-copy-target="code-act2">📋 Copiar Código</button>
+              </div>
+              <pre class="code-block" id="code-act2"><code>// ==========================================
+// ATIVIDADE 2: Interruptor Digital (Botão + LED)
+// Abordagem Principal: INPUT_PULLUP (Lógica == LOW)
+// ==========================================
+
+const int pinoBotao = 2;
+const int pinoLED   = 8;
+
+void setup() {
+  pinMode(pinoBotao, INPUT_PULLUP); // Ativa resistor pull-up interno
+  pinMode(pinoLED, OUTPUT);
+}
+
+void loop() {
+  int estado = digitalRead(pinoBotao);
+
+  // Com INPUT_PULLUP, botão pressionado conecta ao GND (LOW)
+  if (estado == LOW) {
+    digitalWrite(pinoLED, HIGH); // Acende o LED
+    // delay(3000);              // <-- Descomente para o DESAFIO EXTRA (3s)
+  } else {
+    digitalWrite(pinoLED, LOW);  // Apaga o LED
+  }
+}
+
+/* ---------------------------------------------------
+   NOTA COMPARATIVA: Esquema Pull-Down Externo (10 kΩ)
+   (Botão no 5V, Resistor 10kΩ no Pino 2 p/ GND, LED no 13)
+   ---------------------------------------------------
+void setup() {
+  pinMode(2, INPUT);
+  pinMode(13, OUTPUT);
+}
+void loop() {
+  if (digitalRead(2) == HIGH) {
+    digitalWrite(13, HIGH);
+  } else {
+    digitalWrite(13, LOW);
+  }
+}
+*/</code></pre>
+            </div>
+          </div>
+
+          <div class="troubleshooting-box">
+            <h4>🔧 Guia de Troubleshooting ("Se não funcionar...")</h4>
+            <div class="trouble-grid">
+              <div class="trouble-item">
+                <strong>1. O LED já começa aceso sem apertar o botão:</strong>
+                <p>O botão tactile tem 4 pernas (duas a duas já são conectadas internamente). Gire o botão em 90 graus ou use os dois terminais do mesmo lado do vão central.</p>
+              </div>
+              <div class="trouble-item">
+                <strong>2. O LED pisca sozinho ao aproximar a mão dos fios:</strong>
+                <p>O pino 2 está "flutuando" (sem referência). Certifique-se de que usou <code>INPUT_PULLUP</code> no código ou de que o resistor de 10 kΩ está firme no GND.</p>
+              </div>
+              <div class="trouble-item">
+                <strong>3. O Arduino apaga os LEDs e desconecta do USB ao apertar:</strong>
+                <p><strong>Curto-circuito!</strong> Você ligou 5V direto no GND através do botão. Desconecte o USB imediatamente e revise a tabela de ligações.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- =====================================================
+             FICHA 3: DIMMER DE LED COM POTENCIÔMETRO E PWM
+        ====================================================== -->
+        <article class="activity-panel" id="act3">
+          <div class="act-banner">
+            <div>
+              <span class="badge badge-amber">ATIVIDADE 3 • NÍVEL MÉDIO</span>
+              <h3>Dimmer de LED com Potenciômetro e Saída PWM</h3>
+              <p>Leia uma tensão contínua variável na porta analógica <code>A0</code> (0 a 1023), converta a escala com <code>map()</code> e controle suavemente a intensidade luminosa do LED no pino <code>~9</code>.</p>
+            </div>
+            <button class="btn btn-complete-act" data-check-step="at3">✔️ Marcar Ficha 3 como Concluída</button>
+          </div>
+
+          <div class="act-grid-2col">
+            <!-- Checklist de Materiais -->
+            <div class="act-box">
+              <h4>📦 Checklist de Materiais</h4>
+              <ul class="material-checklist">
+                <li><label><input type="checkbox"> 1x Arduino UNO R3 + Cabo USB + Protoboard</label></li>
+                <li><label><input type="checkbox"> 1x Potenciômetro Linear de <strong>10 kΩ</strong></label></li>
+                <li><label><input type="checkbox"> 1x LED 5mm</label></li>
+                <li><label><input type="checkbox"> 1x Resistor de <strong>220 Ω</strong> (Vermelho - Vermelho - Marrom)</label></li>
+                <li><label><input type="checkbox"> Jumpers Macho-Macho</label></li>
+              </ul>
+              <div class="quick-test-note">
+                <strong>📌 Atenção ao Pino com Til (<code>~9</code>):</strong> A função <code>analogWrite()</code> só produz controle de brilho real nos pinos PWM marcados com <code>~</code> na placa (<strong>3, 5, 6, 9, 10 e 11</strong>). Se ligar no pino 8 ou 13, o LED apenas ligará ou desligará bruscamente!
+              </div>
+            </div>
+
+            <!-- Tabela de Ligações -->
+            <div class="act-box">
+              <h4>🔌 Tabela de Ligações (Ponto A → Ponto B → Componente)</h4>
+              <div class="table-responsive">
+                <table class="wiring-table">
+                  <thead>
+                    <tr>
+                      <th>Ponto A (Origem)</th>
+                      <th>Ponto B (Destino)</th>
+                      <th>Componente / Observação</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><code>Potenciômetro Pino 1 (Esq)</code></td>
+                      <td><code>Barramento 5V (+)</code></td>
+                      <td>Alimentação positiva do divisor</td>
+                    </tr>
+                    <tr>
+                      <td><code>Potenciômetro Pino Meio</code></td>
+                      <td><code>Arduino Pino A0</code></td>
+                      <td>Sinal analógico variável (0V a 5V)</td>
+                    </tr>
+                    <tr>
+                      <td><code>Potenciômetro Pino 3 (Dir)</code></td>
+                      <td><code>Barramento GND (-)</code></td>
+                      <td>Referência 0V do potenciômetro</td>
+                    </tr>
+                    <tr>
+                      <td><code>Arduino Pino ~9 (PWM)</code></td>
+                      <td><code>Resistor 220 Ω → Anodo (+)</code></td>
+                      <td>Sinal PWM (0 a 255) para o LED</td>
+                    </tr>
+                    <tr>
+                      <td><code>Catodo do LED (-)</code></td>
+                      <td><code>Barramento GND (-)</code></td>
+                      <td>Retorno ao GND comum</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="act-grid-2col">
+            <div class="act-box">
+              <h4>🛠️ Passo a Passo de Execução</h4>
+              <ol class="step-list">
+                <li><strong>Posicione o Potenciômetro:</strong> Encaixe os 3 terminais do potenciômetro em 3 linhas diferentes da protoboard.</li>
+                <li><strong>Conecte as Pontas e o Meio:</strong> Ligue uma extremidade ao <code>5V</code>, a outra extremidade ao <code>GND</code> e o pino central exatamente na entrada <code>A0</code>.</li>
+                <li><strong>Conecte o LED no Pino PWM <code>~9</code>:</strong> Ligue o pino <code>~9</code> ao resistor de 220 Ω, ao Anodo do LED e feche no <code>GND</code>.</li>
+                <li><strong>Teste o Giro:</strong> Ao girar o eixo, o brilho deve subir gradualmente de 0% a 100%. Se diminuir ao girar para a direita, inverta os jumpers 5V e GND nas pontas do potenciômetro.</li>
+              </ol>
+
+              <div class="challenge-card">
+                <h5>🚀 Desafio Extra (Monitor Serial em Tempo Real)</h5>
+                <p>Ative a comunicação serial com <code>Serial.begin(9600);</code> no <code>setup()</code> e imprima no Monitor Serial da Arduino IDE tanto o valor bruto lido (<code>0 a 1023</code>) quanto o valor PWM convertido (<code>0 a 255</code>) para inspecionar os números na tela do computador!</p>
+              </div>
+            </div>
+
+            <div class="act-box">
+              <div class="code-box-header">
+                <span>💻 Código C++ (Ficha 3: Dimmer PWM + Monitor Serial)</span>
+                <button class="btn-copy" data-copy-target="code-act3">📋 Copiar Código</button>
+              </div>
+              <pre class="code-block" id="code-act3"><code>// ==========================================
+// ATIVIDADE 3: Dimmer de LED com Potenciômetro e PWM
+// ==========================================
+
+const int pinoPot = A0;
+const int pinoLED = 9; // Pino PWM (~9)
+
+void setup() {
+  pinMode(pinoLED, OUTPUT);
+  Serial.begin(9600); // Desafio Extra: Inicia Monitor Serial
+}
+
+void loop() {
+  // 1. Lê o valor analógico do potenciômetro (0 a 1023)
+  int v = analogRead(pinoPot);
+
+  // 2. Converte proporcionalmente da escala 0-1023 para 0-255
+  int brilho = map(v, 0, 1023, 0, 255);
+
+  // 3. Aplica o sinal PWM no LED
+  analogWrite(pinoLED, brilho);
+
+  // Desafio Extra: Exibe leituras no Monitor Serial
+  Serial.print("Leitura A0: ");
+  Serial.print(v);
+  Serial.print(" | PWM (0-255): ");
+  Serial.println(brilho);
+
+  delay(20); // Pequena pausa para estabilidade
+}</code></pre>
+            </div>
+          </div>
+
+          <div class="troubleshooting-box">
+            <h4>🔧 Guia de Troubleshooting ("Se não funcionar...")</h4>
+            <div class="trouble-grid">
+              <div class="trouble-item">
+                <strong>1. O brilho não varia (fica sempre aceso ou sempre apagado):</strong>
+                <p>Verifique se o fio que vai para a porta <code>A0</code> está realmente no <strong>pino central</strong> do potenciômetro e não em uma das pontas.</p>
+              </div>
+              <div class="trouble-item">
+                <strong>2. O potenciômetro esquenta ao girar até o fim:</strong>
+                <p><strong>Desligue o USB imediatamente!</strong> Você inverteu o pino do meio com o 5V/GND, criando um curto direto entre 5V e GND quando a resistência zera.</p>
+              </div>
+              <div class="trouble-item">
+                <strong>3. O brilho aumenta quando giro para a esquerda (anti-horário):</strong>
+                <p>Comportamento normal dependendo do lado montado. Basta trocar entre si os fios <code>5V</code> e <code>GND</code> conectados nos dois pinos das extremidades do potenciômetro.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- =====================================================
+             FICHA 4: CONTROLE CONJUNTO DE LED E MOTOR DC
+        ====================================================== -->
+        <article class="activity-panel" id="act4">
+          <div class="act-banner">
+            <div>
+              <span class="badge badge-red">ATIVIDADE 4 • NÍVEL DESAFIO</span>
+              <h3>Controle Conjunto de LED e Motor DC com Transistor NPN</h3>
+              <p>Integre eletrônica de sinal e eletrônica de potência: use o potenciômetro em <code>A0</code> para controlar simultaneamente o brilho do LED (<code>~9</code>) e a rotação de um Motor DC (<code>~10</code>) via Transistor NPN e Diodo de proteção.</p>
+            </div>
+            <button class="btn btn-complete-act" data-check-step="at4">✔️ Marcar Ficha 4 como Concluída</button>
+          </div>
+
+          <!-- Diagrama Esquemático Visual SVG da Ficha 4 -->
+          <div class="act-schematic-banner">
+            <div class="schematic-title">📐 Diagrama Esquemático de Potência (Transistor NPN + Diodo Flyback + Motor DC)</div>
+            <svg viewBox="0 0 760 185" class="schematic-svg" role="img" aria-label="Esquema elétrico da Atividade 4 com Transistor NPN e Diodo em paralelo com o Motor">
+              <!-- Pino ~10 -->
+              <rect x="20" y="75" width="95" height="36" rx="6" fill="#193DD0"/>
+              <text x="67" y="98" text-anchor="middle" fill="#FFF" font-weight="bold" font-size="12" font-family="monospace">Pino ~10</text>
+              <line x1="115" y1="93" x2="155" y2="93" stroke="#10B981" stroke-width="3"/>
+
+              <!-- Resistor 1k -->
+              <rect x="155" y="78" width="95" height="30" rx="6" fill="#E2C792" stroke="#B45309" stroke-width="2"/>
+              <text x="202" y="97" text-anchor="middle" fill="#0F172A" font-weight="bold" font-size="11" font-family="monospace">1 kΩ (Base)</text>
+              <line x1="250" y1="93" x2="310" y2="93" stroke="#10B981" stroke-width="3"/>
+
+              <!-- Transistor NPN -->
+              <circle cx="345" cy="93" r="35" fill="#131A2A" stroke="#38BDF8" stroke-width="2.5"/>
+              <line x1="332" y1="73" x2="332" y2="113" stroke="#E2E8F0" stroke-width="4"/>
+              <line x1="310" y1="93" x2="332" y2="93" stroke="#10B981" stroke-width="3"/>
+              <line x1="332" y1="82" x2="358" y2="62" stroke="#F59E0B" stroke-width="3"/>
+              <line x1="332" y1="104" x2="358" y2="124" stroke="#38BDF8" stroke-width="3"/>
+              <text x="303" y="84" fill="#10B981" font-size="11" font-weight="bold">B</text>
+              <text x="366" y="64" fill="#F59E0B" font-size="11" font-weight="bold">C</text>
+              <text x="366" y="132" fill="#38BDF8" font-size="11" font-weight="bold">E</text>
+
+              <!-- Emissor para GND -->
+              <line x1="358" y1="124" x2="358" y2="162" stroke="#38BDF8" stroke-width="3"/>
+              <rect x="310" y="155" width="96" height="24" rx="5" fill="#0F172A" stroke="#38BDF8" stroke-width="2"/>
+              <text x="358" y="171" text-anchor="middle" fill="#38BDF8" font-weight="bold" font-size="11" font-family="monospace">GND COMUM</text>
+
+              <!-- Coletor para Nó do Motor/Diodo -->
+              <line x1="358" y1="62" x2="358" y2="35" stroke="#F59E0B" stroke-width="3"/>
+              <line x1="358" y1="35" x2="465" y2="35" stroke="#F59E0B" stroke-width="3"/>
+
+              <!-- Motor DC -->
+              <circle cx="465" cy="90" r="28" fill="#334155" stroke="#F59E0B" stroke-width="2.5"/>
+              <text x="465" y="94" text-anchor="middle" fill="#FBBF24" font-weight="bold" font-size="12">MOTOR</text>
+              <line x1="465" y1="35" x2="465" y2="62" stroke="#F59E0B" stroke-width="3"/>
+              <line x1="465" y1="118" x2="465" y2="148" stroke="#EF4444" stroke-width="3"/>
+
+              <!-- Diodo 1N4007 em Paralelo -->
+              <line x1="465" y1="35" x2="575" y2="35" stroke="#F59E0B" stroke-width="3"/>
+              <line x1="575" y1="35" x2="575" y2="148" stroke="#94A3B8" stroke-width="2.5"/>
+              <rect x="559" y="68" width="32" height="48" rx="4" fill="#0F172A" stroke="#E2E8F0" stroke-width="2"/>
+              <!-- Faixa do Catodo virada para baixo (5V) -->
+              <rect x="559" y="102" width="32" height="9" fill="#E2E8F0"/>
+              <text x="655" y="88" text-anchor="middle" fill="#E2E8F0" font-size="11" font-weight="bold">Diodo em Paralelo</text>
+              <text x="655" y="105" text-anchor="middle" fill="#FBBF24" font-size="10">Faixa Prata no 5V (+)</text>
+
+              <!-- Barramento 5V -->
+              <line x1="465" y1="148" x2="640" y2="148" stroke="#EF4444" stroke-width="3"/>
+              <rect x="640" y="134" width="95" height="28" rx="6" fill="#EF4444"/>
+              <text x="687" y="152" text-anchor="middle" fill="#FFF" font-weight="bold" font-size="12" font-family="monospace">5V (+)</text>
+            </svg>
+          </div>
+
+          <div class="act-grid-2col">
+            <!-- Checklist de Materiais -->
+            <div class="act-box">
+              <h4>📦 Checklist de Materiais</h4>
+              <ul class="material-checklist">
+                <li><label><input type="checkbox"> 1x Arduino UNO R3 + Cabo USB + Protoboard</label></li>
+                <li><label><input type="checkbox"> 1x Potenciômetro <strong>10 kΩ</strong> (mantido da Ficha 3 em <code>A0</code>)</label></li>
+                <li><label><input type="checkbox"> 1x LED + 1x Resistor <strong>220 Ω</strong> (mantido no pino <code>~9</code>)</label></li>
+                <li><label><input type="checkbox"> 1x Micro Motor DC (3V a 6V)</label></li>
+                <li><label><input type="checkbox"> 1x Transistor NPN (<strong>2N2222</strong>, <strong>BC337</strong> ou equivalente)</label></li>
+                <li><label><input type="checkbox"> 1x Resistor de <strong>1 kΩ</strong> (Marrom - Preto - Vermelho) para a Base</label></li>
+                <li><label><input type="checkbox"> 1x Diodo Retificador (<strong>1N4007</strong> ou <strong>1N4148</strong>)</label></li>
+              </ul>
+            </div>
+
+            <!-- Tabela de Ligações -->
+            <div class="act-box">
+              <h4>🔌 Tabela de Ligações (Ponto A → Ponto B → Componente)</h4>
+              <div class="table-responsive">
+                <table class="wiring-table">
+                  <thead>
+                    <tr>
+                      <th>Ponto A (Origem)</th>
+                      <th>Ponto B (Destino)</th>
+                      <th>Componente / Observação</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><code>Potenciômetro Meio</code></td>
+                      <td><code>Arduino Pino A0</code></td>
+                      <td>Pontas no <code>5V</code> e <code>GND</code></td>
+                    </tr>
+                    <tr>
+                      <td><code>Arduino Pino ~9</code></td>
+                      <td><code>Resistor 220 Ω → LED → GND</code></td>
+                      <td>Indicador visual PWM do sistema</td>
+                    </tr>
+                    <tr>
+                      <td><code>Arduino Pino ~10</code></td>
+                      <td><code>Base (B) do Transistor NPN</code></td>
+                      <td>Através do <strong>Resistor de 1 kΩ</strong></td>
+                    </tr>
+                    <tr>
+                      <td><code>Emissor (E) do Transistor</code></td>
+                      <td><code>Barramento GND (-)</code></td>
+                      <td>Terra comum obrigatório</td>
+                    </tr>
+                    <tr>
+                      <td><code>Coletor (C) do Transistor</code></td>
+                      <td><code>Terminal 1 do Motor DC</code></td>
+                      <td>E também ao <strong>Anodo do Diodo</strong> (lado sem faixa)</td>
+                    </tr>
+                    <tr>
+                      <td><code>Terminal 2 do Motor DC</code></td>
+                      <td><code>Barramento 5V (+)</code></td>
+                      <td>E também ao <strong>Catodo do Diodo</strong> (<strong>faixa prateada no +</strong>)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="act-grid-2col">
+            <div class="act-box">
+              <h4>🛠️ Passo a Passo de Execução</h4>
+              <ol class="step-list">
+                <li><strong>Mantenha a base da Ficha 3:</strong> Com o USB desconectado, preserve o potenciômetro em <code>A0</code> e o LED no pino <code>~9</code>.</li>
+                <li><strong>Posicione o Transistor NPN:</strong> Encaixe os 3 pinos (Emissor, Base, Coletor) em 3 linhas separadas da protoboard.</li>
+                <li><strong>Proteja a Base com 1 kΩ:</strong> Ligue o pino <code>~10</code> ao pino central (Base) do transistor usando o resistor de <strong>1 kΩ</strong> (Marrom-Preto-Vermelho).</li>
+                <li><strong>Aterre o Emissor:</strong> Ligue o Emissor ao barramento <code>GND</code>.</li>
+                <li><strong>Instale o Diodo e o Motor:</strong> Conecte o Diodo em paralelo entre o Coletor e o <code>5V</code>, garantindo que a <strong>faixa prateada esteja do lado do <code>5V (+)</code></strong>. Conecte os dois fios do Motor DC nesses mesmos dois pontos (Coletor e 5V).</li>
+              </ol>
+
+              <div class="challenge-card">
+                <h5>🚀 Desafio Extra (Limiar de Partida: <code>v &gt; 512</code>)</h5>
+                <p>Motores DC não conseguem vencer a inércia com PWM muito baixo (apenas "apitam"). Modifique o código para que o LED continue variando de 0 a 255 normalmente, mas o <strong>Motor DC só seja acionado quando a leitura <code>v &gt; 512</code></strong> (metade do curso do potenciômetro); abaixo disso, envie <code>analogWrite(10, 0)</code>!</p>
+              </div>
+            </div>
+
+            <div class="act-box">
+              <div class="code-box-header">
+                <span>💻 Código C++ (Ficha 4: LED + Motor DC + Desafio v &gt; 512)</span>
+                <button class="btn-copy" data-copy-target="code-act4">📋 Copiar Código</button>
+              </div>
+              <pre class="code-block" id="code-act4"><code>// ==========================================
+// ATIVIDADE 4: Controle Conjunto de LED e Motor DC
+// ==========================================
+
+const int pinoPot   = A0;
+const int pinoLED   = 9;  // PWM do LED (~9)
+const int pinoMotor = 10; // PWM da Base do Transistor (~10)
+
+void setup() {
+  pinMode(pinoLED, OUTPUT);
+  pinMode(pinoMotor, OUTPUT);
+}
+
+void loop() {
+  // Lê o potenciômetro (0 a 1023) e mapeia para PWM (0 a 255)
+  int v   = analogRead(pinoPot);
+  int pwm = map(v, 0, 1023, 0, 255);
+
+  // Atualiza o brilho do LED continuamente
+  analogWrite(pinoLED, pwm);
+
+  // Aciona o Motor DC proporcionalmente
+  analogWrite(pinoMotor, pwm);
+
+  /* --- DESAFIO EXTRA: Acionar motor apenas quando v > 512 ---
+  if (v > 512) {
+    analogWrite(pinoMotor, pwm);
+  } else {
+    analogWrite(pinoMotor, 0);
+  }
+  ------------------------------------------------------------- */
+
+  delay(20);
+}</code></pre>
+            </div>
+          </div>
+
+          <div class="troubleshooting-box">
+            <h4>🔧 Guia de Troubleshooting ("Se não funcionar...")</h4>
+            <div class="trouble-grid">
+              <div class="trouble-item">
+                <strong>1. O LED varia o brilho, mas o motor não gira:</strong>
+                <p>Verifique a ordem dos pinos do seu Transistor NPN (2N2222 vs BC337 podem ter Coletor e Emissor invertidos dependendo do fabricante) e confira se o Emissor está no <code>GND comum</code>.</p>
+              </div>
+              <div class="trouble-item">
+                <strong>2. O transistor esquenta muito e o motor não gira:</strong>
+                <p><strong>O Diodo está invertido!</strong> Se a faixa prateada do diodo estiver virada para o Coletor em vez do <code>5V (+)</code>, a corrente passa toda por dentro do diodo em curto, desviando do motor.</p>
+              </div>
+              <div class="trouble-item">
+                <strong>3. O motor faz um zumbido agudo em baixa rotação mas não roda:</strong>
+                <p>Normal em PWM abaixo de ~30%: a tensão média ainda não vence o atrito estático do eixo. Continue girando o potenciômetro ou aplique o código do <strong>Desafio Extra (<code>v &gt; 512</code>)</strong>.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- =========================================================
+           SEÇÃO 5: ÁREA DO PROFESSOR & GERADOR DE EVIDÊNCIAS DO ALUNO
+      ========================================================== -->
+      <section id="professor" class="section-block">
+        <div class="section-heading">
+          <span class="kicker">GESTÃO PEDAGÓGICA & AVALIAÇÃO</span>
+          <h2>Área do Professor & Gerador de Evidências do Aluno</h2>
+          <p>Alterne entre o Plano de Aula Oficial de 100 minutos para docentes e a Ficha Digital Interativa para entrega de evidências das duplas.</p>
+        </div>
+
+        <div class="prof-tabs-bar" role="tablist">
+          <button class="prof-tab-btn active" data-prof-tab="tab-docente" role="tab" aria-selected="true">
+            📋 Plano de Aula & Rubrica (Docente)
+          </button>
+          <button class="prof-tab-btn" data-prof-tab="tab-evidencias" role="tab" aria-selected="false">
+            🎓 Entregar Evidências (Ficha Digital do Aluno)
+          </button>
+        </div>
+
+        <!-- ABA 1: PLANO DE AULA (DOCENTE) -->
+        <div class="prof-tab-panel active" id="tab-docente">
+          <div class="docente-grid">
+            <div class="act-box">
+              <h4>🎯 Objetivos de Aprendizagem da Oficina</h4>
+              <ul class="comp-list">
+                <li>Compreender a arquitetura de um sistema robótico (<strong>Perceber → Processar → Agir</strong>) e as regras de segurança elétrica em bancada.</li>
+                <li>Diferenciar na prática <strong>Saídas Digitais</strong> (<code>HIGH/LOW</code>), <strong>Entradas Digitais</strong> (<code>digitalRead</code> com pull-up/pull-down) e <strong>Entradas Analógicas</strong> (<code>analogRead</code> 0–1023).</li>
+                <li>Dominar o conceito de <strong>PWM (Modulação por Largura de Pulso)</strong> e mapeamento de escalas com <code>map()</code> para controle proporcional de brilho e velocidade.</li>
+                <li>Compreender e montar um estágio de potência com <strong>Transistor NPN e Diodo Flyback</strong> para acionamento seguro de Motores DC.</li>
+              </ul>
+            </div>
+
+            <div class="act-box">
+              <h4>⏱️ Cronograma Oficial da Oficina (100 Minutos)</h4>
+              <div class="table-responsive">
+                <table class="wiring-table">
+                  <thead>
+                    <tr>
+                      <th>Etapa</th>
+                      <th>Tempo</th>
+                      <th>Descrição Pedagógica & Dinâmica</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>1. Abertura</strong></td>
+                      <td><span class="badge badge-primary">10 min</span></td>
+                      <td>Boas-vindas, divisão das duplas, apresentação do objetivo (Do Liga/Desliga ao Motor) e fluxo Tinkercad → Kit Físico.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>2. Revisão Rápida</strong></td>
+                      <td><span class="badge badge-primary">15 min</span></td>
+                      <td>Conceitos de circuito fechado, pinos Digitais vs Analógicos vs PWM (~), função <code>map()</code> e papel do Transistor/Diodo.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>3. Antes de Montar</strong></td>
+                      <td><span class="badge badge-amber">10 min</span></td>
+                      <td>Checklist dos componentes na bancada, identificação das faixas dos resistores (220Ω, 1kΩ, 10kΩ) e 3 Alertas Críticos de Segurança.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>4. Atividade Prática</strong></td>
+                      <td><span class="badge badge-teal">50 min</span></td>
+                      <td>Execução das Fichas Práticas (1 a 4): simulação no Tinkercad, validação com o professor, montagem na protoboard e Desafio Extra.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>5. Compartilhar</strong></td>
+                      <td><span class="badge badge-primary">10 min</span></td>
+                      <td>Demonstração rápida dos circuitos funcionando entre as bancadas e discussão dos erros encontrados e corrigidos.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>6. Fechamento</strong></td>
+                      <td><span class="badge badge-primary">5 min</span></td>
+                      <td>Preenchimento da Ficha Digital de Evidências, organização dos kits e síntese final.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rubrica de Avaliação -->
+          <div class="act-box" style="margin-top: 1.5rem;">
+            <h4>📊 Rubrica de Avaliação Prática (4 Critérios)</h4>
+            <div class="table-responsive">
+              <table class="wiring-table rubric-table">
+                <thead>
+                  <tr>
+                    <th>Critério Avaliado</th>
+                    <th>Iniciante (Em desenvolvimento)</th>
+                    <th>Intermediário (Satisfatório)</th>
+                    <th>Avançado (Plenamente Atingido)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>1. Circuito Montado</strong></td>
+                    <td>Ligações incompletas ou sem atenção à polaridade e valores de resistores.</td>
+                    <td>Circuito montado corretamente seguindo a tabela, com pequeno auxílio na revisão de fios.</td>
+                    <td>Montagem limpa, resistores e polaridades (LED/Diodo/Transistor) 100% corretos e GND comum organizado.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>2. Código Funcionando</strong></td>
+                    <td>Erros de sintaxe impedem a compilação ou pinos não coincidem com a montagem.</td>
+                    <td>Código base compila, carrega e executa o comportamento principal da ficha.</td>
+                    <td>Código base funcionando perfeitamente + implementação bem-sucedida do <strong>Desafio Extra</strong>.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>3. Teste e Correção</strong></td>
+                    <td>Passou direto para o kit físico sem testar no Tinkercad ou não investigou falhas.</td>
+                    <td>Simulou no Tinkercad antes de montar e corrigiu eventuais fios invertidos com o guia.</td>
+                    <td>Validou no Tinkercad, diagnosticou falhas com autonomia e explicou a causa técnica da correção.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>4. Evidências</strong></td>
+                    <td>Entregou apenas o link sem responder às questões de reflexão técnica.</td>
+                    <td>Preencheu o link do Tinkercad e respondeu de forma básica às 2 perguntas.</td>
+                    <td>Relatório completo com link público funcional do Tinkercad e respostas técnicas claras e precisas.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ABA 2: ENTREGAR EVIDÊNCIAS (FICHA DIGITAL DO ALUNO) -->
+        <div class="prof-tab-panel" id="tab-evidencias">
+          <div class="evidence-layout">
+            <!-- Formulário -->
+            <form id="evidence-form" class="act-box evidence-form">
+              <h4>📝 Preencher Ficha Digital de Evidências</h4>
+              <p class="form-desc">Preencha os dados da sua dupla. As 2 perguntas de reflexão mudam automaticamente conforme a atividade escolhida.</p>
+
+              <div class="form-group">
+                <label for="ev-names">Nome dos Integrantes da Dupla / Equipe *</label>
+                <input type="text" id="ev-names" required placeholder="Ex.: Ana Silva e Carlos Souza (Turma B)">
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label for="ev-activity">Atividade Prática Realizada *</label>
+                  <select id="ev-activity">
+                    <option value="1">Atividade 1 (Básico): Acender LED com Porta A0 / Sinalizador</option>
+                    <option value="2">Atividade 2 (Básico): Interruptor Digital (Botão + LED)</option>
+                    <option value="3">Atividade 3 (Médio): Dimmer de LED com Potenciômetro e PWM</option>
+                    <option value="4">Atividade 4 (Desafio): Controle Conjunto de LED e Motor DC</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="ev-extra">Concluiu o Desafio Extra?</label>
+                  <select id="ev-extra">
+                    <option value="Sim, concluído e testado com sucesso!">Sim, concluído e testado!</option>
+                    <option value="Parcialmente (testado apenas no Tinkercad)">Parcialmente (apenas no Tinkercad)</option>
+                    <option value="Não, realizamos apenas o circuito principal">Apenas o circuito principal</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="ev-url">URL Pública do Projeto no Tinkercad *</label>
+                <input type="url" id="ev-url" required placeholder="https://www.tinkercad.com/things/exemplo...">
+              </div>
+
+              <div class="form-group">
+                <label for="ev-q1" id="label-q1">1. O que acontece com o LED quando o pino A0 está em HIGH e quando muda para LOW? Qual a função do resistor de 220 Ω?</label>
+                <textarea id="ev-q1" rows="3" required placeholder="Digite a resposta técnica da dupla..."></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="ev-q2" id="label-q2">2. Qual foi a diferença entre testar o LED direto no pino 5V e controlá-lo pelo pino A0 programado como OUTPUT?</label>
+                <textarea id="ev-q2" rows="3" required placeholder="Explique o que observaram na bancada..."></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="ev-notes">Erros encontrados e como corrigiram (Teste e Correção):</label>
+                <textarea id="ev-notes" rows="2" placeholder="Ex.: Inicialmente o LED estava invertido, corrigimos olhando o chanfro do catodo..."></textarea>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">✨ Gerar Resumo para Entrega</button>
+                <button type="button" id="btn-fill-demo" class="btn btn-outline">Preencher Exemplo</button>
+              </div>
+            </form>
+
+            <!-- Cartão de Resumo Gerado -->
+            <div class="act-box evidence-output-box" id="evidence-output-wrapper">
+              <div class="output-header">
+                <h4>📄 Cartão Oficial de Evidência</h4>
+                <span class="badge badge-teal" id="ev-status-badge">Aguardando geração</span>
+              </div>
+
+              <div id="evidence-card-preview" class="evidence-receipt">
+                <div class="receipt-top">
+                  <strong>RELATÓRIO DE EVIDÊNCIA — OFICINA DE ROBÓTICA COM ARDUINO UNO</strong>
+                  <span id="rec-date">Data: --/--/----</span>
+                </div>
+                <div class="receipt-body">
+                  <p><strong>Dupla / Equipe:</strong> <span id="rec-names">Preencha o formulário ao lado</span></p>
+                  <p><strong>Ficha Prática:</strong> <span id="rec-activity">—</span></p>
+                  <p><strong>Desafio Extra:</strong> <span id="rec-extra">—</span></p>
+                  <p><strong>Link Tinkercad:</strong> <a href="#" id="rec-url" target="_blank" rel="noopener">—</a></p>
+                  <hr>
+                  <div class="rec-qa">
+                    <strong id="rec-q1-title">Pergunta 1:</strong>
+                    <p id="rec-a1">—</p>
+                  </div>
+                  <div class="rec-qa">
+                    <strong id="rec-q2-title">Pergunta 2:</strong>
+                    <p id="rec-a2">—</p>
+                  </div>
+                  <div class="rec-qa">
+                    <strong>Registro de Testes & Correções na Bancada:</strong>
+                    <p id="rec-notes">—</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="export-actions">
+                <button type="button" id="btn-copy-report" class="btn btn-secondary" disabled>📋 Copiar Resumo</button>
+                <button type="button" id="btn-download-md" class="btn btn-secondary" disabled>⬇️ Baixar .MD</button>
+                <button type="button" id="btn-download-txt" class="btn btn-secondary" disabled>⬇️ Baixar .TXT</button>
+                <button type="button" id="btn-print-report" class="btn btn-outline" disabled>🖨️ Imprimir / PDF</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="site-footer">
+        <div class="footer-inner">
+          <div>
+            <strong>Robótica com Arduino — Do Liga/Desliga ao Controle de Motor</strong>
+            <p>Plataforma Educacional Interativa • HTML5, CSS3 & Vanilla JS • Pronta para GitHub Pages</p>
+          </div>
+          <div class="footer-links">
+            <a href="#inicio">Topo ↑</a>
+            <a href="#bancada">Pinagem UNO</a>
+            <a href="#aulas">Simulador PWM</a>
+            <a href="#atividades">4 Fichas</a>
+            <a href="#professor">Evidências</a>
+          </div>
+        </div>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- Toast de Notificação -->
+  <div id="toast" class="toast" role="status" aria-live="polite">Código copiado para a área de transferência!</div>
+
+  <script src="script.js"></script>
+</body>
+</html>
